@@ -50,6 +50,7 @@ def PH_up():
 	global dose_on_time
 	global retry_count
 	success = None
+	count = 0
 
 	## GPIO Setup
 	while success==None:
@@ -95,6 +96,7 @@ def PH_down():
 	global dose_on_time
 	global retry_count
 	success = None
+	count = 0
 
 
 	## GPIO Setup
