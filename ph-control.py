@@ -17,10 +17,14 @@ ph_probe_ADC = 0
 
 
 ## Define Global variables
-high_ph_thresh = 8
-low_ph_thresh = 7
+margin = 0.5
+high_ph_thresh = 8 + margin
+low_ph_thresh = 7 - margin
+dose_delay_time = 60
+dose_on_time = 5
 temperature = 25
 PH = None
+retry_count = 10
 
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
@@ -36,19 +40,95 @@ def stop_all():
 	GPIO.output(ph_down, GPIO.HIGH)
 
 
-def PH_up(on_time = 5):
+def PH_up():
 	'''
 	'''
-	GPIO.output(ph_up, GPIO.LOW)
-	time.sleep(on_time)
-	GPIO.output(ph_up, GPIO.HIGH)
+	global PH
+	global ph_up
+	global low_ph_thresh
+	global dose_delay_time
+	global dose_on_time
+	global retry_count
 
-def PH_down(on_time = 5):
+	## GPIO Setup
+	while success==None:
+		try:
+			GPIO.setup(ph_up,GPIO.OUT)
+			GPIO.output(ph_up, GPIO.HIGH)
+			print('\nInitialized PH up doser')
+			success = 1
+		except:
+			print('\ERROR Initializing PH up doser')
+			pass
+	while True:
+		try:
+			if PH < low_ph_thresh:
+				print(f'PH+: {PH} lower than threashold, activating pump')
+				GPIO.output(ph_up, GPIO.LOW)
+				time.sleep(dose_on_time)
+				GPIO.output(ph_up, GPIO.HIGH)
+				print(f'PH+: pump deactivated, waiting {dose_delay_time} seconds')
+				time.sleep(dose_delay_time)
+
+				count = 0
+			else:
+				pass
+		except:
+			count += 1
+			tries_left = retry_count-count
+			print(f'ERROR in PH Up control, will try {tries_left} more times')
+
+			if count => retry_count:
+				print("Exceeded the number of retries, closing process... attempting to restart process")
+				thread.exit()
+			else:
+				pass
+
+def PH_down():
 	'''
 	'''
-	GPIO.output(ph_down, GPIO.LOW)
-	time.sleep(on_time)
-	GPIO.output(ph_down, GPIO.HIGH)
+	global PH
+	global ph_up
+	global high_ph_thresh
+	global dose_delay_time
+	global dose_on_time
+	global retry_count
+
+
+	## GPIO Setup
+	while success==None:
+		try:
+			GPIO.setup(ph_down,GPIO.OUT)
+			GPIO.output(ph_down, GPIO.HIGH)
+			print('\nInitialized PH down doser')
+			success = 1
+		except:
+			print('\ERROR Initializing PH down doser')
+			pass
+	while True:
+		try:
+			if PH > high_ph_thresh:
+				print(f'PH-: {PH} higher than the upper threashold, activating pump')
+				GPIO.output(ph_down, GPIO.LOW)
+				time.sleep(dose_on_time)
+				GPIO.output(ph_down, GPIO.HIGH)
+				print(f'PH-: pump deactivated, waiting {dose_delay_time} seconds')
+				time.sleep(dose_delay_time)
+
+				count = 0
+			else:
+				pass
+		except:
+			count += 1
+			tries_left = retry_count-count
+			print(f'ERROR in PH down control, will try {tries_left} more times')
+
+			if count => retry_count:
+				print("Exceeded the number of retries, closing process... attempting to restart process")
+				thread.exit()
+			else:
+				pass
+
 
 def get_PH():
 	'''
@@ -100,11 +180,6 @@ if __name__ == '__main__':
 		GPIO.setwarnings(False)
 		GPIO.setmode(GPIO.BCM)
 
-		GPIO.setup(ph_up,GPIO.OUT)
-		GPIO.setup(ph_down ,GPIO.OUT)
-		GPIO.output(ph_up, GPIO.HIGH) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
-		GPIO.output(ph_down, GPIO.HIGH) #set relay off
-
 		print("\nSetup of Relay Module is [success]")
 	except:
 		print('\nCould not initialize gpio pins')
@@ -112,6 +187,9 @@ if __name__ == '__main__':
 
 ##### Main Code
 	ph_monitor = threading.Thread(target=get_PH)
+	ph_up_control = thread.Thread(target = PH_up)
+	ph_down_control = thread.Thread(target = PH_down)
+
 	ph_monitor.start()
 
 	time.sleep(10)
