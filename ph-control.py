@@ -103,6 +103,10 @@ if __name__ == '__main__':
 	ph_monitor.start()
 
 
+	time.sleep(10)
+	temperature = 55
+
+
 
 
 
