@@ -67,7 +67,7 @@ def get_PH():
 
 		print("\nSetup PH Sensor Set up")
 
-	else:
+	except:
 		print("Error Initializing PH Probe")
 		exit()
 
