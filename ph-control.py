@@ -187,8 +187,8 @@ if __name__ == '__main__':
 
 ##### Main Code
 	ph_monitor = threading.Thread(target=get_PH)
-	ph_up_control = thread.Thread(target = PH_up)
-	ph_down_control = thread.Thread(target = PH_down)
+	ph_up_control = threading.Thread(target = PH_up)
+	ph_down_control = threading.Thread(target = PH_down)
 
 	ph_monitor.start()
 	ph_up_control.start()
