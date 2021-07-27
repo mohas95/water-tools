@@ -1,0 +1,3 @@
+[submodule "DFRobot_PH"]
+	path = DFRobot_PH
+	url = https://github.com/DFRobot/DFRobot_PH.git
