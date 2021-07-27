@@ -75,6 +75,7 @@ def get_PH():
 		#Get the Digital Value of Analog of selected channel
 		ph_voltage = ads1115.readVoltage(ph_probe_ADC)
 		#Convert voltage to PH with temperature compensation
+		print(f'PH Voltage {ph_voltage}, Temperature{temperature} ----> ', end = '')
 		PH = ph.readPH(ph_voltage['r'],temperature)
 		print("Temperature:{} PH:{}".format(temperature,PH))
 		time.sleep(1.0)
