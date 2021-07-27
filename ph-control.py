@@ -7,8 +7,6 @@ import time
 from DFRobot_ADS1115 import ADS1115
 from DFRobot_PH import DFRobot_PH
 
-import
-
 import threading
 
 ## Define RPI Pins
