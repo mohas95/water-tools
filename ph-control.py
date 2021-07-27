@@ -191,7 +191,9 @@ if __name__ == '__main__':
 	ph_down_control = thread.Thread(target = PH_down)
 
 	ph_monitor.start()
-
+	ph_up_control.start()
+	ph_down_control.start()
+	
 	time.sleep(10)
 	temperature = -5
 	time.sleep(10)
