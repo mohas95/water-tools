@@ -63,34 +63,35 @@ def PH_up():
 			print('\ERROR Initializing PH up doser')
 			pass
 	while True:
-		try:
-			if PH < low_ph_thresh:
-				print(f'PH+: {PH} lower than threashold, activating pump')
-				GPIO.output(ph_up, GPIO.LOW)
-				time.sleep(dose_on_time)
-				GPIO.output(ph_up, GPIO.HIGH)
-				print(f'PH+: pump deactivated, waiting {dose_delay_time} seconds')
-				time.sleep(dose_delay_time)
+		while PH:
+			try:
+				if PH < low_ph_thresh:
+					print(f'PH+: {PH} lower than threashold, activating pump')
+					GPIO.output(ph_up, GPIO.LOW)
+					time.sleep(dose_on_time)
+					GPIO.output(ph_up, GPIO.HIGH)
+					print(f'PH+: pump deactivated, waiting {dose_delay_time} seconds')
+					time.sleep(dose_delay_time)
 
-				count = 0
-			else:
-				pass
-		except:
-			count += 1
-			tries_left = retry_count-count
-			print(f'ERROR in PH Up control, will try {tries_left} more times')
+					count = 0
+				else:
+					pass
+			except:
+				count += 1
+				tries_left = retry_count-count
+				print(f'ERROR in PH Up control, will try {tries_left} more times')
 
-			if count >= retry_count:
-				print("Exceeded the number of retries, closing process... attempting to restart process")
-				thread.exit()
-			else:
-				pass
+				if count >= retry_count:
+					print("Exceeded the number of retries, closing process... attempting to restart process")
+					thread.exit()
+				else:
+					pass
 
 def PH_down():
 	'''
 	'''
 	global PH
-	global ph_up
+	global ph_down
 	global high_ph_thresh
 	global dose_delay_time
 	global dose_on_time
@@ -110,28 +111,29 @@ def PH_down():
 			print('\ERROR Initializing PH down doser')
 			pass
 	while True:
-		try:
-			if PH > high_ph_thresh:
-				print(f'PH-: {PH} higher than the upper threashold, activating pump')
-				GPIO.output(ph_down, GPIO.LOW)
-				time.sleep(dose_on_time)
-				GPIO.output(ph_down, GPIO.HIGH)
-				print(f'PH-: pump deactivated, waiting {dose_delay_time} seconds')
-				time.sleep(dose_delay_time)
+		while PH:
+			try:
+				if PH > high_ph_thresh:
+					print(f'PH-: {PH} higher than the upper threashold, activating pump')
+					GPIO.output(ph_down, GPIO.LOW)
+					time.sleep(dose_on_time)
+					GPIO.output(ph_down, GPIO.HIGH)
+					print(f'PH-: pump deactivated, waiting {dose_delay_time} seconds')
+					time.sleep(dose_delay_time)
 
-				count = 0
-			else:
-				pass
-		except:
-			count += 1
-			tries_left = retry_count-count
-			print(f'ERROR in PH down control, will try {tries_left} more times')
+					count = 0
+				else:
+					pass
+			except:
+				count += 1
+				tries_left = retry_count-count
+				print(f'ERROR in PH down control, will try {tries_left} more times')
 
-			if count >= retry_count:
-				print("Exceeded the number of retries, closing process... attempting to restart process")
-				thread.exit()
-			else:
-				pass
+				if count >= retry_count:
+					print("Exceeded the number of retries, closing process... attempting to restart process")
+					thread.exit()
+				else:
+					pass
 
 
 def get_PH():
