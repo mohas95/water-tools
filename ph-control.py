@@ -20,6 +20,7 @@ ph_probe_ADC = 0
 high_ph_thresh = 8
 low_ph_thresh = 7
 temperature = 25
+PH = None
 
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
@@ -54,31 +55,39 @@ def get_PH():
 	'''
 	global ph_probe_ADC
 	global temperature
+	global PH
 
-	try:
-		ads1115 = ADS1115()
-		ph = DFRobot_PH()
+	while success = None:
+		try:
+			ads1115 = ADS1115()
+			ph = DFRobot_PH()
 
-		ads1115.setAddr_ADS1115(0x48)
-		ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
+			ads1115.setAddr_ADS1115(0x48)
+			ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
 
-		ph.reset()
-		ph.begin()
+			ph.reset()
+			ph.begin()
 
-		print("\nPH Sensor Set up Successful")
+			print("\nPH Sensor Set up Successful")
+			success = 1
 
-	except:
-		print("Error Initializing PH Probe")
-		exit()
+		except:
+			print("Error Initializing PH Probe")
+			pass
 
 	while True:
-		#Get the Digital Value of Analog of selected channel
-		ph_voltage = ads1115.readVoltage(ph_probe_ADC)
-		#Convert voltage to PH with temperature compensation
-		print('PH Voltage {}, Temperature{} ----> '.format(ph_voltage['r'],temperature), end = '')
-		PH = ph.readPH(ph_voltage['r'],temperature)
-		print("PH:{}".format(PH))
-		time.sleep(1.0)
+		try:
+			#Get the Digital Value of Analog of selected channel
+			ph_voltage = ads1115.readVoltage(ph_probe_ADC)
+			#Convert voltage to PH with temperature compensation
+			print('PH Voltage: {}, Temperature: {} ----> '.format(ph_voltage['r'],temperature), end = '')
+			PH = ph.readPH(ph_voltage['r'],temperature)
+			print("PH:{}".format(PH))
+			time.sleep(1.0)
+		else:
+			PH = None
+			print('ERROR trying to Get PH data from the sensor')
+			exit()
 
 
 
