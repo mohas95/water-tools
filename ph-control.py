@@ -102,7 +102,8 @@ if __name__ == '__main__':
 	ph_monitor = threading.Thread(target=get_PH)
 	ph_monitor.start()
 
-
+	time.sleep(10)
+	temperature = -5
 	time.sleep(10)
 	temperature = 55
 
