@@ -99,7 +99,8 @@ if __name__ == '__main__':
 		exit()
 
 ##### Main Code
-	get_PH()
+	ph_monitor = threading.Thread(target=get_PH)
+	ph_monitor.start()
 
 
 
