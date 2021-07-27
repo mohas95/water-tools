@@ -21,6 +21,7 @@
 - sudo apt-get install libatlas-base-dev -y
 - sudo apt install libtiff -y
 - sudo apt install libtiff5 -y
+- sudo apt-get install -y i2c-tools
 
 ### Install virtualenv
 - sudo apt install python3-pip
