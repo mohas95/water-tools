@@ -1,5 +1,5 @@
 import sys
-sys.path.append('./DFRobot_PH')
+sys.path.append('./DFRobot')
 
 import RPi.GPIO as GPIO
 import time
@@ -65,7 +65,7 @@ def get_PH():
 		ph.reset()
 		ph.begin()
 
-		print("\nSetup PH Sensor Set up")
+		print("\nPH Sensor Set up Successful")
 
 	except:
 		print("Error Initializing PH Probe")
