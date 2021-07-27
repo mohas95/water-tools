@@ -57,7 +57,9 @@ def get_PH():
 	global temperature
 	global PH
 
-	while success = None:
+	success = None
+	
+	while success == None:
 		try:
 			ads1115 = ADS1115()
 			ph = DFRobot_PH()
