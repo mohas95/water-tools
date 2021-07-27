@@ -13,15 +13,14 @@ import threading
 ph_up = 26 # Relay_Ch1 = 26
 ph_down = 20 # Relay_Ch2 = 20
 # Relay_Ch3 = 21
-
-## initialize objects
-ads1115 = ADS1115()
-ph = DFRobot_PH()
+ph_probe_ADC = 0
 
 
 ## Define Global variables
 high_ph_thresh = 8
 low_ph_thresh = 7
+temperature = 25
+
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
 ADS1115_REG_CONFIG_PGA_2_048V        = 0x04 # 2.048V range = Gain 2 (default)
@@ -50,41 +49,57 @@ def PH_down(on_time = 5):
 	time.sleep(on_time)
 	GPIO.output(ph_down, GPIO.HIGH)
 
+def get_PH():
+	'''
+	'''
+	global ph_probe_ADC
+	global temperature
+
+	try:
+		ads1115 = ADS1115()
+		ph = DFRobot_PH()
+
+		ads1115.setAddr_ADS1115(0x48)
+		ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
+
+		ph.reset()
+		ph.begin()
+
+		print("\nSetup PH Sensor Set up")
+
+	else:
+		print("Error Initializing PH Probe")
+		exit()
+
+	while True:
+		#Get the Digital Value of Analog of selected channel
+		ph_voltage = ads1115.readVoltage(ph_probe_ADC)
+		#Convert voltage to PH with temperature compensation
+		PH = ph.readPH(ph_voltage['r'],temperature)
+		print("Temperature:{} PH:{}".format(temperature,PH))
+		time.sleep(1.0)
+
 
 
 if __name__ == '__main__':
 
 ###### GPIO Setup
-	GPIO.setwarnings(False)
-	GPIO.setmode(GPIO.BCM)
+	try:
+		GPIO.setwarnings(False)
+		GPIO.setmode(GPIO.BCM)
 
-	GPIO.setup(ph_up,GPIO.OUT)
-	GPIO.setup(ph_down ,GPIO.OUT)
-	GPIO.output(ph_up, GPIO.HIGH) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
-	GPIO.output(ph_down, GPIO.HIGH) #set relay off
+		GPIO.setup(ph_up,GPIO.OUT)
+		GPIO.setup(ph_down ,GPIO.OUT)
+		GPIO.output(ph_up, GPIO.HIGH) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
+		GPIO.output(ph_down, GPIO.HIGH) #set relay off
 
-	print("\nSetup of Relay Module is [success]")
-
-##### PH Sensor setup
-
-	ads1115.setAddr_ADS1115(0x48)
-	ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
-	ph.reset()
-	ph.begin()
-
-	print("\nSetup PH Sensor Set up")
+		print("\nSetup of Relay Module is [success]")
+	except:
+		print('\nCould not initialize gpio pins')
+		exit()
 
 ##### Main Code
-	while True :
-		#Read your temperature sensor to execute temperature compensation
-		temperature = 25
-
-		#Get the Digital Value of Analog of selected channel
-		adc0 = ads1115.readVoltage(0)
-		#Convert voltage to PH with temperature compensation
-		PH = ph.readPH(adc0['r'],temperature)
-		print("Temperature:{} PH:{}".format(temperature,PH))
-		time.sleep(1.0)
+	get_PH()
 
 
 
