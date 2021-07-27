@@ -38,3 +38,9 @@
 - pip install pillow
 - pip install numpy
 - pip install pandas
+
+## Hardware
+
+- Raspberrypi 3B+
+- DFRobot PH sensor V2 PRO (within the DFROBOT_PH subdirectory)
+- DFRobot ADS1115 ADC unit (within the DFROBOT_PH subdirectory)
