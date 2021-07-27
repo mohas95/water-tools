@@ -1,5 +1,7 @@
 import RPi.GPIO as GPIO
 import time
+import
+
 import threading
 
 ## Define RPI Pins
@@ -56,12 +58,12 @@ if __name__ == '__main__':
 
 
 
-	## Test
-
-	GPIO.output(ph_up, GPIO.LOW) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
-	time.sleep(15)
-	GPIO.output(ph_down, GPIO.LOW) #set relay off
-	time.sleep(15)
-
-	GPIO.output(ph_up, GPIO.HIGH) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
-	GPIO.output(ph_down, GPIO.HIGH) #set relay off
+	# ## Test
+	#
+	# GPIO.output(ph_up, GPIO.LOW) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
+	# time.sleep(15)
+	# GPIO.output(ph_down, GPIO.LOW) #set relay off
+	# time.sleep(15)
+	#
+	# GPIO.output(ph_up, GPIO.HIGH) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
+	# GPIO.output(ph_down, GPIO.HIGH) #set relay off
