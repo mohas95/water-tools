@@ -17,7 +17,7 @@ ph_probe_ADC = 0
 
 
 ## Define Global variables
-margin = 0.5
+margin = 0
 high_ph_thresh = 8 + margin
 low_ph_thresh = 7 - margin
 dose_delay_time = 60
