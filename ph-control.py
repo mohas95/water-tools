@@ -78,7 +78,7 @@ def PH_up():
 			tries_left = retry_count-count
 			print(f'ERROR in PH Up control, will try {tries_left} more times')
 
-			if count => retry_count:
+			if count >= retry_count:
 				print("Exceeded the number of retries, closing process... attempting to restart process")
 				thread.exit()
 			else:
@@ -123,7 +123,7 @@ def PH_down():
 			tries_left = retry_count-count
 			print(f'ERROR in PH down control, will try {tries_left} more times')
 
-			if count => retry_count:
+			if count >= retry_count:
 				print("Exceeded the number of retries, closing process... attempting to restart process")
 				thread.exit()
 			else:
@@ -193,7 +193,7 @@ if __name__ == '__main__':
 	ph_monitor.start()
 	ph_up_control.start()
 	ph_down_control.start()
-	
+
 	time.sleep(10)
 	temperature = -5
 	time.sleep(10)
