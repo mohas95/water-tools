@@ -49,6 +49,7 @@ def PH_up():
 	global dose_delay_time
 	global dose_on_time
 	global retry_count
+	success == None
 
 	## GPIO Setup
 	while success==None:
@@ -93,6 +94,7 @@ def PH_down():
 	global dose_delay_time
 	global dose_on_time
 	global retry_count
+	success == None
 
 
 	## GPIO Setup
