@@ -21,9 +21,9 @@ if __name__ == '__main__':
 	print("\nSetup of Relay Module is [success]")
 
 	GPIO.output(ph_up, GPIO.LOW) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
-    time.sleep(15)
-    GPIO.output(ph_down, GPIO.LOW) #set relay off
-    time.sleep(15)
+	time.sleep(15)
+	GPIO.output(ph_down, GPIO.LOW) #set relay off
+	time.sleep(15)
 
 	GPIO.output(ph_up, GPIO.HIGH) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
 	GPIO.output(ph_down, GPIO.HIGH) #set relay off
