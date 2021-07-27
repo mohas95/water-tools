@@ -77,8 +77,8 @@ def get_PH():
 			print("Error Initializing PH Probe")
 			pass
 
-	try:
-		while True:
+	while True:
+		try:
 			#Get the Digital Value of Analog of selected channel
 			ph_voltage = ads1115.readVoltage(ph_probe_ADC)
 			#Convert voltage to PH with temperature compensation
@@ -86,10 +86,10 @@ def get_PH():
 			PH = ph.readPH(ph_voltage['r'],temperature)
 			print("PH:{}".format(PH))
 			time.sleep(1.0)
-	except:
-		PH = None
-		print('ERROR trying to Get PH data from the sensor')
-		# exit()
+		except:
+			PH = None
+			print('ERROR trying to Get PH data from the sensor')
+			# exit()
 
 
 
