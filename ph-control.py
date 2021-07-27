@@ -58,7 +58,7 @@ def get_PH():
 	global PH
 
 	success = None
-	
+
 	while success == None:
 		try:
 			ads1115 = ADS1115()
@@ -86,7 +86,7 @@ def get_PH():
 			PH = ph.readPH(ph_voltage['r'],temperature)
 			print("PH:{}".format(PH))
 			time.sleep(1.0)
-		else:
+		except:
 			PH = None
 			print('ERROR trying to Get PH data from the sensor')
 			exit()
