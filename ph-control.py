@@ -157,6 +157,7 @@ def get_PH():
 	count = 0
 
 	while ph_monitor_status:
+		print('ph_monitor_status')
 		### Sensor Setup
 		while success == None:
 			try:
