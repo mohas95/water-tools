@@ -170,14 +170,15 @@ def get_PH():
 				ads1115.setAddr_ADS1115(AS1115_I2C_ADR) # set the I2C Address to 0x48
 				ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
 
-				ph.reset()
+				# ph.reset()
 				ph.begin()
 
 				print("\n[PH monitor]: PH Sensor Set up Successful")
 				success = 1
 
 			except:
-				print("[PH monitor]: Error Initializing PH Probe")
+				print("[PH monitor]: Error Initializing PH Probe, reseting please recalibrate")
+				ph.reset()
 				pass
 
 		### Process
@@ -254,7 +255,6 @@ if __name__ == '__main__':
 ##### Main Code
 
 	while True:
-
 		try:
 			with open(status_json, "r") as f:
 				status = json.load(f)
@@ -263,7 +263,6 @@ if __name__ == '__main__':
 				f.write(json.dumps(status, indent=4) )
 			print(f'Error in config file detected new file created and formated with last known status: {status_json}')
 			pass
-
 
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
