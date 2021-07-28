@@ -263,8 +263,7 @@ if __name__ == '__main__':
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
 
-		pprint.pprint(status)
-		pretty_dict_str = pprint.pformat(status)
+		print(json.dumps(status, sort_keys=False, indent=4))
 
 		time.sleep(2)
 
