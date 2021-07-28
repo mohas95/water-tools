@@ -201,6 +201,7 @@ def get_PH():
 				ph_monitor_status = False
 			else:
 				pass
+	PH= None
 
 
 if __name__ == '__main__':
