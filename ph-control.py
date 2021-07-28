@@ -24,6 +24,7 @@ dose_on_time = 5
 temperature = 25
 PH = None
 retry_count = 10
+AS1115_I2C_ADR = 0x48
 
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
@@ -56,6 +57,8 @@ def PH_up():
 		except:
 			print('\ERROR Initializing PH up doser')
 			pass
+
+	### Process
 	while True:
 		while PH:
 			try:
@@ -103,6 +106,8 @@ def PH_down():
 		except:
 			print('\ERROR Initializing PH down doser')
 			pass
+
+	### Process
 	while True:
 		while PH:
 			try:
@@ -135,15 +140,18 @@ def get_PH():
 	global ph_probe_ADC
 	global temperature
 	global PH
-
+	global retry_count
+	global AS1115_I2C_ADR
 	success = None
+	count = 0
 
+	### Sensor Setup
 	while success == None:
 		try:
-			ads1115 = ADS1115()
-			ph = DFRobot_PH()
+			ads1115 = ADS1115() #instantiate as1115 ADC I2X Unit
+			ph = DFRobot_PH() # instantiate PH Probe
 
-			ads1115.setAddr_ADS1115(0x48)
+			ads1115.setAddr_ADS1115(AS1115_I2C_ADR) # set the I2C Address to 0x48
 			ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
 
 			ph.reset()
@@ -156,6 +164,7 @@ def get_PH():
 			print("Error Initializing PH Probe")
 			pass
 
+	### Process
 	while True:
 		try:
 			#Get the Digital Value of Analog of selected channel
@@ -167,8 +176,15 @@ def get_PH():
 			time.sleep(1.0)
 		except:
 			PH = None
-			print('ERROR trying to Get PH data from the sensor')
-			# exit()
+			count += 1
+			tries_left = retry_count-count
+			print(f'ERROR trying to Get PH data from the sensor, will try {tries_left} more times')
+
+			if count >= retry_count:
+				print("Exceeded the number of retries, closing process... attempting to restart process")
+				thread.exit()
+			else:
+				pass
 
 
 
