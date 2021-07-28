@@ -225,9 +225,9 @@ if __name__ == '__main__':
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
 
-		ph_monitor = threading.Thread(target=get_PH,daemon=True)
-		ph_up_control = threading.Thread(target = PH_up,daemon=True)
-		ph_down_control = threading.Thread(target = PH_down, daemon=True)
+		ph_monitor = threading.Thread(target=get_PH)
+		ph_up_control = threading.Thread(target = PH_up)
+		ph_down_control = threading.Thread(target = PH_down)
 
 		ph_monitor.start()
 		ph_up_control.start()
@@ -251,8 +251,11 @@ if __name__ == '__main__':
 		print(type(ph_up_status))
 
 		if not ph_monitor.is_alive():
+			ph_monitor = threading.Thread(target=get_PH)
 			ph_monitor.start()
 		if not ph_up_control.is_alive():
+			ph_up_control = threading.Thread(target = PH_up)
 			ph_up_control.start()
 		if not ph_down_control.is_alive():
+			ph_down_control = threading.Thread(target = PH_down)
 			ph_down_control.start()
