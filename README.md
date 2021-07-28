@@ -45,6 +45,15 @@
 - DFRobot PH sensor V2 PRO (within the DFROBOT_PH subdirectory)
 - DFRobot ADS1115 ADC unit (within the DFROBOT_PH subdirectory)
 
+## Configuration and user control files
+### ./status.json
+- this file will set status of the processes: PH up, PH Down, and PH Monitoring, this file can be modified directly but serves as a file that allows for user controls
+### ./config/ph-control.service
+- this file runs the ph-control script as a service file on linux OS
+### ./phdata.txt
+-  this file saves the Calibration parameters of the DFRobot PH sensor
+
+
 
 ## Issues
 
