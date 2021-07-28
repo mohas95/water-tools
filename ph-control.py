@@ -157,9 +157,9 @@ def get_PH():
 	count = 0
 
 	while ph_monitor_status:
-		print('ph_monitor_status')
+		print(ph_monitor_status)
 		### Sensor Setup
-		while success == None:
+		while success == None and ph_monitor_status:
 			try:
 				ads1115 = ADS1115() #instantiate as1115 ADC I2X Unit
 				ph = DFRobot_PH() # instantiate PH Probe
@@ -178,7 +178,7 @@ def get_PH():
 				pass
 
 		### Process
-		while True:
+		while ph_monitor_status:
 			try:
 				#Get the Digital Value of Analog of selected channel
 				ph_voltage = ads1115.readVoltage(ph_probe_ADC)
