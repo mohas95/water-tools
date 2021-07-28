@@ -3,6 +3,8 @@ sys.path.append('./DFRobot')
 
 import RPi.GPIO as GPIO
 import time
+import json
+import os.path
 
 from DFRobot_ADS1115 import ADS1115
 from DFRobot_PH import DFRobot_PH
@@ -25,6 +27,11 @@ temperature = 25
 PH = None
 retry_count = 10
 AS1115_I2C_ADR = 0x48
+ph_up_status = False
+ph_down_status = False
+ph_monitor_status = False
+status_json = './status.json'
+
 
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
@@ -200,6 +207,20 @@ if __name__ == '__main__':
 		print('\nCould not initialize gpio pins')
 		exit()
 
+###### Import config file
+	try:
+		if os.path.isfile(status_json):
+			with open(status_json, "r") as f:
+				status = json.load(f)
+			print(f'status json file loaded: {status_json}')
+		else:
+			status = {"ph_up":False, "ph_down":False, "ph_monitor":False}
+			with open(status_json, "w") as f:
+				f.write(json.dumps(status, indent=4) )
+			print(f'{status_json} does not exit, new file created and formated')
+	except:
+		print('\nCould not open or create json file of the processes')
+
 ##### Main Code
 	ph_monitor = threading.Thread(target=get_PH)
 	ph_up_control = threading.Thread(target = PH_up)
@@ -208,3 +229,9 @@ if __name__ == '__main__':
 	ph_monitor.start()
 	ph_up_control.start()
 	ph_down_control.start()
+
+
+	while True:
+		read config file
+
+		if
