@@ -5,7 +5,6 @@ import RPi.GPIO as GPIO
 import time
 import json
 import os.path
-import yaml
 
 from DFRobot_ADS1115 import ADS1115
 from DFRobot_PH import DFRobot_PH
@@ -263,7 +262,7 @@ if __name__ == '__main__':
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
 
-		print(yaml.dump(status, sort_keys=False, default_flow_style=False))
+		print(status)
 
 		time.sleep(2)
 
