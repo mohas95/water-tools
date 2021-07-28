@@ -218,15 +218,22 @@ if __name__ == '__main__':
 
 ###### Import config file & start processes, Initial setup
 	try:
-		if os.path.isfile(status_json):
-			with open(status_json, "r") as f:
-				status = json.load(f)
-			print(f'status json file loaded: {status_json}')
-		else:
+		try:
+			if os.path.isfile(status_json):
+				with open(status_json, "r") as f:
+					status = json.load(f)
+				print(f'status json file loaded: {status_json}')
+			else:
+				status = {"ph_up":False, "ph_down":False, "ph_monitor":False}
+				with open(status_json, "w") as f:
+					f.write(json.dumps(status, indent=4) )
+				print(f'{status_json} does not exit, new file created and formated')
+		except:
 			status = {"ph_up":False, "ph_down":False, "ph_monitor":False}
 			with open(status_json, "w") as f:
 				f.write(json.dumps(status, indent=4) )
-			print(f'{status_json} does not exit, new file created and formated')
+			print(f'Config file currupted, new file created and formated: {status_json}')
+			pass
 
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
