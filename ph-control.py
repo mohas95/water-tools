@@ -50,6 +50,7 @@ def PH_up():
 	global dose_delay_time
 	global dose_on_time
 	global retry_count
+	global ph_up_status
 	success = None
 	count = 0
 
@@ -100,6 +101,7 @@ def PH_down():
 	global dose_delay_time
 	global dose_on_time
 	global retry_count
+	global ph_down_status
 	success = None
 	count = 0
 
@@ -150,6 +152,7 @@ def get_PH():
 	global PH
 	global retry_count
 	global AS1115_I2C_ADR
+	global ph_monitor_status
 	success = None
 	count = 0
 
