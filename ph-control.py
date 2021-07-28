@@ -27,9 +27,9 @@ temperature = 25
 PH = None
 retry_count = 10
 AS1115_I2C_ADR = 0x48
-ph_up_status = False
-ph_down_status = False
-ph_monitor_status = False
+ph_up_status = None
+ph_down_status = None
+ph_monitor_status = None
 status_json = './status.json'
 
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
