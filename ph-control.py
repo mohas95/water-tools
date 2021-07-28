@@ -9,15 +9,14 @@ from DFRobot_PH import DFRobot_PH
 
 import threading
 
-## Define RPI Pins
+################################################## Define RPI Pins
 ph_up = 26 # Relay_Ch1 = 26
 ph_down = 20 # Relay_Ch2 = 20
 # Relay_Ch3 = 21
-ph_probe_ADC = 0
+ph_probe_ADC = 0 #Analog 0 pin on the as1115 ADC
 
-
-## Define Global variables
-margin = 0
+################################################# Define Global variables
+margin = 0.5
 high_ph_thresh = 8 + margin
 low_ph_thresh = 7 - margin
 dose_delay_time = 60
@@ -33,12 +32,7 @@ ADS1115_REG_CONFIG_PGA_1_024V        = 0x06 # 1.024V range = Gain 4
 ADS1115_REG_CONFIG_PGA_0_512V        = 0x08 # 0.512V range = Gain 8
 ADS1115_REG_CONFIG_PGA_0_256V        = 0x0A # 0.256V range = Gain 16
 
-def stop_all():
-	'''
-	'''
-	GPIO.output(ph_up, GPIO.HIGH)
-	GPIO.output(ph_down, GPIO.HIGH)
-
+################################################# Process Functions
 
 def PH_up():
 	'''
@@ -52,7 +46,7 @@ def PH_up():
 	success = None
 	count = 0
 
-	## GPIO Setup
+	### GPIO Setup
 	while success==None:
 		try:
 			GPIO.setup(ph_up,GPIO.OUT)
@@ -99,8 +93,7 @@ def PH_down():
 	success = None
 	count = 0
 
-
-	## GPIO Setup
+	### GPIO Setup
 	while success==None:
 		try:
 			GPIO.setup(ph_down,GPIO.OUT)
@@ -186,7 +179,7 @@ if __name__ == '__main__':
 		GPIO.setwarnings(False)
 		GPIO.setmode(GPIO.BCM)
 
-		print("\nSetup of Relay Module is [success]")
+		print("\nGPIO flags set")
 	except:
 		print('\nCould not initialize gpio pins')
 		exit()
@@ -199,22 +192,3 @@ if __name__ == '__main__':
 	ph_monitor.start()
 	ph_up_control.start()
 	ph_down_control.start()
-
-	time.sleep(10)
-	temperature = -5
-	time.sleep(10)
-	temperature = 55
-
-
-
-
-
-	# ## Test
-	#
-	# GPIO.output(ph_up, GPIO.LOW) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
-	# time.sleep(15)
-	# GPIO.output(ph_down, GPIO.LOW) #set relay off
-	# time.sleep(15)
-	#
-	# GPIO.output(ph_up, GPIO.HIGH) #set relay off	GPIO.output(Relay_Ch1, GPIO.HIGH) #set relay off
-	# GPIO.output(ph_down, GPIO.HIGH) #set relay off
