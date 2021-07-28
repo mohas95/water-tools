@@ -254,7 +254,7 @@ if __name__ == '__main__':
 		except:
 			with open(status_json, "w") as f:
 				f.write(json.dumps(status, indent=4) )
-			print(f'{status_json} new file created and formated')
+			print(f'{status_json}Error in config file detected new file created and formated with last known status')
 			pass
 
 
