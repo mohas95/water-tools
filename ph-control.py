@@ -54,43 +54,45 @@ def PH_up():
 	success = None
 	count = 0
 
+	### GPIO Setup
+	while success==None and ph_up_status:
+		try:
+			GPIO.setup(ph_up,GPIO.OUT)
+			GPIO.output(ph_up, GPIO.HIGH)
+			print('\n[PH+]: Initialized PH up doser')
+			success = 1
+		except:
+			print('\n[PH+]: ERROR Initializing PH up doser')
+			pass
+
+	### Process
 	while ph_up_status:
-		### GPIO Setup
-		while success==None:
+		if not PH:
+			print('[PH+]: Please Enable PH readings')
+			time.sleep(10)
+		while PH:
 			try:
-				GPIO.setup(ph_up,GPIO.OUT)
-				GPIO.output(ph_up, GPIO.HIGH)
-				print('\n[PH+]: Initialized PH up doser')
-				success = 1
+				if PH < low_ph_thresh:
+					print(f'[PH+]: {PH} lower than threashold, activating pump')
+					GPIO.output(ph_up, GPIO.LOW)
+					time.sleep(dose_on_time)
+					GPIO.output(ph_up, GPIO.HIGH)
+					print(f'[PH+]: pump deactivated, waiting {dose_delay_time} seconds')
+					time.sleep(dose_delay_time)
+
+					count = 0
+				else:
+					pass
 			except:
-				print('\n[PH+]: ERROR Initializing PH up doser')
-				pass
+				count += 1
+				tries_left = retry_count-count
+				print(f'[PH+]: ERROR in PH Up control, will try {tries_left} more times')
 
-		### Process
-		while True:
-			while PH:
-				try:
-					if PH < low_ph_thresh:
-						print(f'[PH+]: {PH} lower than threashold, activating pump')
-						GPIO.output(ph_up, GPIO.LOW)
-						time.sleep(dose_on_time)
-						GPIO.output(ph_up, GPIO.HIGH)
-						print(f'[PH+]: pump deactivated, waiting {dose_delay_time} seconds')
-						time.sleep(dose_delay_time)
-
-						count = 0
-					else:
-						pass
-				except:
-					count += 1
-					tries_left = retry_count-count
-					print(f'[PH+]: ERROR in PH Up control, will try {tries_left} more times')
-
-					if count >= retry_count:
-						print("[PH+]: Exceeded the number of retries, closing process... attempting to restart process")
-						thread.exit()
-					else:
-						pass
+				if count >= retry_count:
+					print("[PH+]: Exceeded the number of retries, closing process... attempting to restart process")
+					ph_up_status = False
+				else:
+					pass
 
 def PH_down():
 	'''
@@ -105,43 +107,45 @@ def PH_down():
 	success = None
 	count = 0
 
+	### GPIO Setup
+	while success==None and ph_down_status:
+		try:
+			GPIO.setup(ph_down,GPIO.OUT)
+			GPIO.output(ph_down, GPIO.HIGH)
+			print('\n[PH-]: Initialized PH down doser')
+			success = 1
+		except:
+			print('\n[PH-]: ERROR Initializing PH down doser')
+			pass
+
+	### Process
 	while ph_down_status:
-		### GPIO Setup
-		while success==None:
+		if not PH:
+			print('[PH-]: Please Enable PH readings')
+			time.sleep(10)
+		while PH:
 			try:
-				GPIO.setup(ph_down,GPIO.OUT)
-				GPIO.output(ph_down, GPIO.HIGH)
-				print('\n[PH-]: Initialized PH down doser')
-				success = 1
+				if PH > high_ph_thresh:
+					print(f'[PH-]: {PH} higher than the upper threashold, activating pump')
+					GPIO.output(ph_down, GPIO.LOW)
+					time.sleep(dose_on_time)
+					GPIO.output(ph_down, GPIO.HIGH)
+					print(f'[PH-]: pump deactivated, waiting {dose_delay_time} seconds')
+					time.sleep(dose_delay_time)
+
+					count = 0
+				else:
+					pass
 			except:
-				print('\n[PH-]: ERROR Initializing PH down doser')
-				pass
+				count += 1
+				tries_left = retry_count-count
+				print(f'[PH-]: ERROR in PH down control, will try {tries_left} more times')
 
-		### Process
-		while True:
-			while PH:
-				try:
-					if PH > high_ph_thresh:
-						print(f'[PH-]: {PH} higher than the upper threashold, activating pump')
-						GPIO.output(ph_down, GPIO.LOW)
-						time.sleep(dose_on_time)
-						GPIO.output(ph_down, GPIO.HIGH)
-						print(f'[PH-]: pump deactivated, waiting {dose_delay_time} seconds')
-						time.sleep(dose_delay_time)
-
-						count = 0
-					else:
-						pass
-				except:
-					count += 1
-					tries_left = retry_count-count
-					print(f'[PH-]: ERROR in PH down control, will try {tries_left} more times')
-
-					if count >= retry_count:
-						print("[PH-]: Exceeded the number of retries, closing process... attempting to restart process")
-						thread.exit()
-					else:
-						pass
+				if count >= retry_count:
+					print("[PH-]: Exceeded the number of retries, closing process... attempting to restart process")
+					ph_down_status = False
+				else:
+					pass
 
 
 def get_PH():
@@ -193,8 +197,8 @@ def get_PH():
 			print(f'[PH monitor]: ERROR trying to Get PH data from the sensor, will try {tries_left} more times')
 
 			if count >= retry_count:
-				print("[PH monitor]: Exceeded the number of retries, closing process... attempting to restart process")
-				thread.exit()
+				print("[PH monitor]: Exceeded the number of retries, closing process... Please restart process")
+				ph_monitor_status = False
 			else:
 				pass
 
