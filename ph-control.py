@@ -160,48 +160,48 @@ def get_PH():
 	success = None
 	count = 0
 
-	# while ph_monitor_status:
-		### Sensor Setup
-	while success == None and ph_monitor_status:
-		try:
-			ads1115 = ADS1115() #instantiate as1115 ADC I2X Unit
-			ph = DFRobot_PH() # instantiate PH Probe
-
-			ads1115.setAddr_ADS1115(AS1115_I2C_ADR) # set the I2C Address to 0x48
-			ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
-
-			ph.reset()
-			ph.begin()
-
-			print("\n[PH monitor]: PH Sensor Set up Successful")
-			success = 1
-
-		except:
-			print("[PH monitor]: Error Initializing PH Probe")
-			pass
-
-	### Process
 	while ph_monitor_status:
-		try:
-			#Get the Digital Value of Analog of selected channel
-			ph_voltage = ads1115.readVoltage(ph_probe_ADC)
-			#Convert voltage to PH with temperature compensation
-			print('[PH monitor]: PH Voltage: {}, Temperature: {} ----> '.format(ph_voltage['r'],temperature), end = '')
-			PH = ph.readPH(ph_voltage['r'],temperature)
-			print("PH:{}".format(PH))
-			time.sleep(1.0)
-		except:
-			PH = None
-			count += 1
-			tries_left = retry_count-count
-			print(f'[PH monitor]: ERROR trying to Get PH data from the sensor, will try {tries_left} more times')
+		### Sensor Setup
+		while success == None and ph_monitor_status:
+			try:
+				ads1115 = ADS1115() #instantiate as1115 ADC I2X Unit
+				ph = DFRobot_PH() # instantiate PH Probe
 
-			if count >= retry_count:
-				print("[PH monitor]: Exceeded the number of retries, closing process... Please restart process")
-				ph_monitor_status = False
-			else:
+				ads1115.setAddr_ADS1115(AS1115_I2C_ADR) # set the I2C Address to 0x48
+				ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
+
+				ph.reset()
+				ph.begin()
+
+				print("\n[PH monitor]: PH Sensor Set up Successful")
+				success = 1
+
+			except:
+				print("[PH monitor]: Error Initializing PH Probe")
 				pass
-	PH= None
+
+		### Process
+		while ph_monitor_status:
+			try:
+				#Get the Digital Value of Analog of selected channel
+				ph_voltage = ads1115.readVoltage(ph_probe_ADC)
+				#Convert voltage to PH with temperature compensation
+				print('[PH monitor]: PH Voltage: {}, Temperature: {} ----> '.format(ph_voltage['r'],temperature), end = '')
+				PH = ph.readPH(ph_voltage['r'],temperature)
+				print("PH:{}".format(PH))
+				time.sleep(1.0)
+			except:
+				PH = None
+				count += 1
+				tries_left = retry_count-count
+				print(f'[PH monitor]: ERROR trying to Get PH data from the sensor, will try {tries_left} more times')
+
+				if count >= retry_count:
+					print("[PH monitor]: Exceeded the number of retries, closing process... Please restart process")
+					ph_monitor_status = False
+				else:
+					pass
+		PH = None
 
 
 if __name__ == '__main__':
