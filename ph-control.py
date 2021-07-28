@@ -197,6 +197,9 @@ def get_PH():
 
 
 if __name__ == '__main__':
+	global ph_up_status
+	global ph_down_status
+	global ph_monitor_status 
 
 ###### GPIO Setup
 	try:
@@ -247,6 +250,8 @@ if __name__ == '__main__':
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
+
+		print(type(ph_up_status))
 
 		if not ph_monitor.is_alive():
 			ph_monitor.start()
