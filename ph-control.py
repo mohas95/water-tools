@@ -264,6 +264,8 @@ if __name__ == '__main__':
 		ph_monitor_status = status['ph_monitor']
 
 		pprint.pprint(status)
+		pretty_dict_str = pprint.pformat(status)
+
 		time.sleep(2)
 
 		if not ph_monitor.is_alive():
