@@ -197,9 +197,6 @@ def get_PH():
 
 
 if __name__ == '__main__':
-	global ph_up_status
-	global ph_down_status
-	global ph_monitor_status 
 
 ###### GPIO Setup
 	try:
