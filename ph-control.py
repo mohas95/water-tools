@@ -5,6 +5,7 @@ import RPi.GPIO as GPIO
 import time
 import json
 import os.path
+import pprint
 
 from DFRobot_ADS1115 import ADS1115
 from DFRobot_PH import DFRobot_PH
@@ -216,7 +217,7 @@ if __name__ == '__main__':
 		print('\nCould not initialize gpio pins')
 		exit()
 
-###### Import config file & start processes
+###### Import config file & start processes, Initial setup
 	try:
 		if os.path.isfile(status_json):
 			with open(status_json, "r") as f:
@@ -262,7 +263,7 @@ if __name__ == '__main__':
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
 
-		print(status)
+		pprint.pprint(status)
 		time.sleep(2)
 
 		if not ph_monitor.is_alive():
