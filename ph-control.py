@@ -248,8 +248,6 @@ if __name__ == '__main__':
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
 
-		print(type(ph_up_status))
-
 		if not ph_monitor.is_alive():
 			ph_monitor = threading.Thread(target=get_PH)
 			ph_monitor.start()
