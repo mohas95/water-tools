@@ -228,7 +228,6 @@ if __name__ == '__main__':
 				f.write(json.dumps(status, indent=4) )
 			print(f'{status_json} does not exit, new file created and formated')
 
-
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
@@ -249,8 +248,15 @@ if __name__ == '__main__':
 
 	while True:
 
-		with open(status_json, "r") as f:
-			status = json.load(f)
+		try:
+			with open(status_json, "r") as f:
+				status = json.load(f)
+		except:
+			with open(status_json, "w") as f:
+				f.write(json.dumps(status, indent=4) )
+			print(f'{status_json} new file created and formated')
+			pass
+
 
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
@@ -260,11 +266,11 @@ if __name__ == '__main__':
 		time.sleep(2)
 
 		if not ph_monitor.is_alive():
-			ph_monitor = threading.Thread(target=get_PH)
+			ph_monitor = threading.Thread(target=get_PH,daemon=True)
 			ph_monitor.start()
 		if not ph_up_control.is_alive():
-			ph_up_control = threading.Thread(target = PH_up)
+			ph_up_control = threading.Thread(target = PH_up,daemon=True)
 			ph_up_control.start()
 		if not ph_down_control.is_alive():
-			ph_down_control = threading.Thread(target = PH_down)
+			ph_down_control = threading.Thread(target = PH_down,daemon=True)
 			ph_down_control.start()
