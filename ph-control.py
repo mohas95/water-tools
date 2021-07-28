@@ -248,9 +248,9 @@ if __name__ == '__main__':
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
 
-		if ph_monitor.is_alive() == False:
+		if not ph_monitor.is_alive():
 			ph_monitor.start()
-		if ph_up_control.is_alive() == False:
+		if not ph_up_control.is_alive():
 			ph_up_control.start()
-		if ph_down_control.is_alive() ==False:
+		if not ph_down_control.is_alive():
 			ph_down_control.start()
