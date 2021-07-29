@@ -53,11 +53,10 @@
 ### ./phdata.txt
 -  this file saves the Calibration parameters of the DFRobot PH sensor
 
-
-
 ## Issues
 
 - MQTT communication for UI control
 - Calibration protocol
 - Service file
 - PH Logging
+- add temperature sensor for temperature compensation

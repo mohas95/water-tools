@@ -16,6 +16,7 @@ ph_up = 26 # Relay_Ch1 = 26
 ph_down = 20 # Relay_Ch2 = 20
 # Relay_Ch3 = 21
 ph_probe_ADC = 0 #Analog 0 pin on the as1115 ADC
+AS1115_I2C_ADR = 0x48 # address of the I2C AS1115 ADC
 
 ################################################# Define Global variables
 margin = 0.5 # margin of sensitivity for the PH Threshold
@@ -25,7 +26,6 @@ dose_delay_time = 60 # Delay time between dosages
 dose_on_time = 5 # Length of dose time
 temperature = 25 # Fixed temperature, should be replaced with sensor readings for temp compensation
 retry_count = 10 # number of times process will try to restart until it exits
-AS1115_I2C_ADR = 0x48 # address of the I2C AS1115 ADC
 status_json = './status.json' #location of the status json file
 refresh_rate = 2 #how often program will check for changes of status from status json file in seconds
 sample_frequency = 1.0 #sample frequency of the ph probe in seconds
