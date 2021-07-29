@@ -74,7 +74,7 @@ def PH_up():
 		if not PH:
 			print('[PH+]: Please Enable PH readings')
 			time.sleep(10)
-		while PH:
+		while PH and ph_up_status:
 			try:
 				if PH < low_ph_thresh:
 					print(f'[PH+]: {PH} lower than threashold, activating pump')
@@ -127,7 +127,7 @@ def PH_down():
 		if not PH:
 			print('[PH-]: Please Enable PH readings')
 			time.sleep(10)
-		while PH:
+		while PH and ph_down_status:
 			try:
 				if PH > high_ph_thresh:
 					print(f'[PH-]: {PH} higher than the upper threashold, activating pump')
