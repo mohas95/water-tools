@@ -18,19 +18,23 @@ ph_down = 20 # Relay_Ch2 = 20
 ph_probe_ADC = 0 #Analog 0 pin on the as1115 ADC
 
 ################################################# Define Global variables
-margin = 0.5
-high_ph_thresh = 8 + margin
-low_ph_thresh = 7 - margin
-dose_delay_time = 60
-dose_on_time = 5
-temperature = 25
-PH = None
-retry_count = 10
-AS1115_I2C_ADR = 0x48
-ph_up_status = None
-ph_down_status = None
-ph_monitor_status = None
-status_json = './status.json'
+margin = 0.5 # margin of sensitivity for the PH Threshold
+high_ph_thresh = 8 + margin # upper threshold of pH until ph down activates
+low_ph_thresh = 7 - margin # lower threshold of pH until ph down activates
+dose_delay_time = 60 # Delay time between dosages
+dose_on_time = 5 # Length of dose time
+temperature = 25 # Fixed temperature, should be replaced with sensor readings for temp compensation
+retry_count = 10 # number of times process will try to restart until it exits
+AS1115_I2C_ADR = 0x48 # address of the I2C AS1115 ADC
+status_json = './status.json' #location of the status json file
+refresh_rate = 2 #how often program will check for changes of status from status json file in seconds
+sample_frequency = 1.0 #sample frequency of the ph probe in seconds
+
+### DO NOT CHANGE THESE VARIABLES (used to pass information between processes)
+PH = None # variable storing PH readings, set to None, when ph monitor is not activated
+ph_up_status = None # variable used to pass on the status of each process determined by the status.json file
+ph_down_status = None # variable used to pass on the status of each process determined by the status.json file
+ph_monitor_status = None# variable used to pass on the status of each process determined by the status.json file
 
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
@@ -157,6 +161,7 @@ def get_PH():
 	global retry_count
 	global AS1115_I2C_ADR
 	global ph_monitor_status
+	global sample_frequency
 	success = None
 	count = 0
 
@@ -190,7 +195,9 @@ def get_PH():
 				print('[PH monitor]: PH Voltage: {}, Temperature: {} ----> '.format(ph_voltage['r'],temperature), end = '')
 				PH = ph.readPH(ph_voltage['r'],temperature)
 				print("PH:{}".format(PH))
-				time.sleep(1.0)
+				time.sleep(sample_frequency)
+
+				count = 0
 			except:
 				PH = None
 				count += 1
@@ -270,7 +277,7 @@ if __name__ == '__main__':
 
 		print(status)
 
-		time.sleep(2)
+		time.sleep(refresh_rate)
 
 		if not ph_monitor.is_alive():
 			ph_monitor = threading.Thread(target=get_PH,daemon=True)
