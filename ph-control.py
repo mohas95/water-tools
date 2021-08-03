@@ -48,6 +48,7 @@ ADS1115_REG_CONFIG_PGA_0_256V        = 0x0A # 0.256V range = Gain 16
 def PH_up():
 	'''
 	'''
+	global temperature
 	global PH
 	global ph_up
 	global low_ph_thresh
@@ -151,7 +152,66 @@ def PH_down():
 				else:
 					pass
 
+def get_TEMPERATURE():
+	'''
+	'''
+	global temperature
+	global retry_count
+	global ph_temperature_status
+	global sample_frequency
+	while ph_temperature_status:
+		### Sensor Setup
+		while success == None and ph_temperature_status:
+			try:
+				# Settings for the RTD temperature probe
+				os.system('modprobe w1-gpio')
+				os.system('modprobe w1-therm')
+				base_dir = '/sys/bus/w1/devices/'
+				device_folder = glob.glob(base_dir + '28*')[0]
+				device_file = device_folder + '/w1_slave'
 
+				print("\n[Temperature monitor]: Temperature Sensor Set up Successful")
+				success = 1
+
+			except:
+				print("[Temperature monitor]: Error Initializing Temperature Probe, reseting please recalibrate")
+				temperature = 25
+				pass
+
+		### Process
+		while ph_temperature_status:
+			try:
+				f = open(device_file,'r')
+				lines = f.readlines()
+				f.close()
+				# lines = read_temp_raw()
+				while lines[0].strip()[-3:] != 'YES':
+					time.sleep(0.2)
+					f = open(device_file, 'r')
+					lines = f.readlines()
+					f.close()
+					# lines = read_temp_raw()
+					equals_pos = lines[1].find('t=')
+					if equals_pos != -1:
+						temp_string = lines[1][equals_pos+2:]
+						temperature = float(temp_string) / 1000.0
+
+				print("Temperature:{}".format(temperature))
+				time.sleep(sample_frequency)
+
+				count = 0
+			except:
+				TEMPERATURE = None
+				count += 1
+				tries_left = retry_count-count
+				print(f'[TEMPERATURE monitor]: ERROR trying to Get Temperature data from the sensor, will try {tries_left} more times')
+
+				if count >= retry_count:
+					print("[TEMPERATURE monitor]: Exceeded the number of retries, closing process... Please restart process")
+					ph_temperature_status = False
+				else:
+					pass
+		temperature = None
 def get_PH():
 	'''
 	'''
@@ -232,25 +292,27 @@ if __name__ == '__main__':
 					status = json.load(f)
 				print(f'status json file loaded: {status_json}')
 			else:
-				status = {"ph_up":False, "ph_down":False, "ph_monitor":False}
+				status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "ph_temperature" : False}
 				with open(status_json, "w") as f:
 					f.write(json.dumps(status, indent=4) )
 				print(f'{status_json} does not exit, new file created and formated')
 		except:
-			status = {"ph_up":False, "ph_down":False, "ph_monitor":False}
+			status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "ph_temperature" : False}
 			with open(status_json, "w") as f:
 				f.write(json.dumps(status, indent=4) )
 			print(f'Config file currupted, new file created and formated: {status_json}')
 			pass
-
+		ph_temperature_status = status['ph_temperature']
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
 
+		ph_temperature = threading.Thread(target=get_TEMPERATURE,daemon=True)
 		ph_monitor = threading.Thread(target=get_PH,daemon=True)
 		ph_up_control = threading.Thread(target = PH_up,daemon=True)
 		ph_down_control = threading.Thread(target = PH_down,daemon=True)
 
+		ph_temperature.start()
 		ph_monitor.start()
 		ph_up_control.start()
 		ph_down_control.start()
@@ -270,7 +332,7 @@ if __name__ == '__main__':
 				f.write(json.dumps(status, indent=4) )
 			print(f'Error in config file detected new file created and formated with last known status: {status_json}')
 			pass
-
+		ph_temperature_status = status['ph_temperature']
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
@@ -278,7 +340,9 @@ if __name__ == '__main__':
 		print(status)
 
 		time.sleep(refresh_rate)
-
+		if not ph_temperature.is_alive():
+			ph_temperature = threading.Thread(target=get_TEMPERATURE,daemon=True)
+			ph_temperature.start()
 		if not ph_monitor.is_alive():
 			ph_monitor = threading.Thread(target=get_PH,daemon=True)
 			ph_monitor.start()
