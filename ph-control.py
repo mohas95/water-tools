@@ -35,6 +35,7 @@ PH = None # variable storing PH readings, set to None, when ph monitor is not ac
 ph_up_status = None # variable used to pass on the status of each process determined by the status.json file
 ph_down_status = None # variable used to pass on the status of each process determined by the status.json file
 ph_monitor_status = None# variable used to pass on the status of each process determined by the status.json file
+temp_monitor_status = None
 
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
@@ -152,16 +153,18 @@ def PH_down():
 				else:
 					pass
 
-def get_TEMPERATURE():
+def get_temp():
 	'''
 	'''
 	global temperature
 	global retry_count
-	global ph_temperature_status
+	global temp_monitor_status
 	global sample_frequency
-	while ph_temperature_status:
+
+
+	while temp_monitor_status:
 		### Sensor Setup
-		while success == None and ph_temperature_status:
+		while success == None and temp_monitor_status:
 			try:
 				# Settings for the RTD temperature probe
 				os.system('modprobe w1-gpio')
@@ -174,12 +177,12 @@ def get_TEMPERATURE():
 				success = 1
 
 			except:
-				print("[Temperature monitor]: Error Initializing Temperature Probe, reseting please recalibrate")
-				temperature = 25
+				print("[Temperature monitor]: Error Initializing Temperature Probe, please reset")
+				temperature = None
 				pass
 
 		### Process
-		while ph_temperature_status:
+		while temp_monitor_status:
 			try:
 				f = open(device_file,'r')
 				lines = f.readlines()
@@ -201,17 +204,18 @@ def get_TEMPERATURE():
 
 				count = 0
 			except:
-				TEMPERATURE = None
+				temperature = None
 				count += 1
 				tries_left = retry_count-count
 				print(f'[TEMPERATURE monitor]: ERROR trying to Get Temperature data from the sensor, will try {tries_left} more times')
 
 				if count >= retry_count:
 					print("[TEMPERATURE monitor]: Exceeded the number of retries, closing process... Please restart process")
-					ph_temperature_status = False
+					temp_monitor_status = False
 				else:
 					pass
 		temperature = None
+		
 def get_PH():
 	'''
 	'''
@@ -292,27 +296,27 @@ if __name__ == '__main__':
 					status = json.load(f)
 				print(f'status json file loaded: {status_json}')
 			else:
-				status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "ph_temperature" : False}
+				status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
 				with open(status_json, "w") as f:
 					f.write(json.dumps(status, indent=4) )
 				print(f'{status_json} does not exit, new file created and formated')
 		except:
-			status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "ph_temperature" : False}
+			status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
 			with open(status_json, "w") as f:
 				f.write(json.dumps(status, indent=4) )
 			print(f'Config file currupted, new file created and formated: {status_json}')
 			pass
-		ph_temperature_status = status['ph_temperature']
+		temp_monitor_status = status['temp_monitor']
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
 
-		ph_temperature = threading.Thread(target=get_TEMPERATURE,daemon=True)
+		temp_monitor = threading.Thread(target=get_temp,daemon=True)
 		ph_monitor = threading.Thread(target=get_PH,daemon=True)
 		ph_up_control = threading.Thread(target = PH_up,daemon=True)
 		ph_down_control = threading.Thread(target = PH_down,daemon=True)
 
-		ph_temperature.start()
+		temp_monitor.start()
 		ph_monitor.start()
 		ph_up_control.start()
 		ph_down_control.start()
@@ -332,7 +336,7 @@ if __name__ == '__main__':
 				f.write(json.dumps(status, indent=4) )
 			print(f'Error in config file detected new file created and formated with last known status: {status_json}')
 			pass
-		ph_temperature_status = status['ph_temperature']
+		temp_monitor_status = status['temp_monitor']
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
 		ph_monitor_status = status['ph_monitor']
@@ -340,9 +344,9 @@ if __name__ == '__main__':
 		print(status)
 
 		time.sleep(refresh_rate)
-		if not ph_temperature.is_alive():
-			ph_temperature = threading.Thread(target=get_TEMPERATURE,daemon=True)
-			ph_temperature.start()
+		if not temp_monitor.is_alive():
+			temp_monitor = threading.Thread(target=get_temp,daemon=True)
+			temp_monitor.start()
 		if not ph_monitor.is_alive():
 			ph_monitor = threading.Thread(target=get_PH,daemon=True)
 			ph_monitor.start()
