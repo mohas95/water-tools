@@ -374,7 +374,6 @@ if __name__ == '__main__':
 		# 	print(f'Error in config file detected new file created and formated with last known status: {status_json}')
 		# 	pass
 
-
 		status = load_status(status_json, status)
 
 
