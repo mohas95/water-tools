@@ -167,21 +167,21 @@ def get_temp():
 	while temp_monitor_status:
 		### Sensor Setup
 		while success == None and temp_monitor_status:
-			try:
-				# Settings for the RTD temperature probe
-				os.system('modprobe w1-gpio')
-				os.system('modprobe w1-therm')
-				base_dir = '/sys/bus/w1/devices/'
-				device_folder = glob.glob(base_dir + '28*')[0]
-				device_file = device_folder + '/w1_slave'
+			# try:
+			# Settings for the RTD temperature probe
+			os.system('modprobe w1-gpio')
+			os.system('modprobe w1-therm')
+			base_dir = '/sys/bus/w1/devices/'
+			device_folder = glob.glob(base_dir + '28*')[0]
+			device_file = device_folder + '/w1_slave'
 
-				print("\n[Temperature monitor]: Temperature Sensor Set up Successful")
-				success = 1
+			print("\n[Temperature monitor]: Temperature Sensor Set up Successful")
+			success = 1
 
-			except:
-				print("[Temperature monitor]: Error Initializing Temperature Probe, please reset")
-				temperature = None
-				pass
+			# except:
+			# 	print("[Temperature monitor]: Error Initializing Temperature Probe, please reset")
+			# 	temperature = None
+			# 	pass
 
 		### Process
 		while temp_monitor_status:
