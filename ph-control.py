@@ -284,6 +284,34 @@ def get_PH():
 		PH = None
 
 
+
+def load_status(file, last_status=None):
+
+	if os.path.isfile(file):
+		try:
+			with open(status_json, "r") as f:
+				status = json.load(f)
+			print(f'status json file loaded: {status_json}')
+		except:
+			if last_status:
+				status = last_status
+				with open(status_json, "w") as f:
+					f.write(json.dumps(status, indent=4) )
+				print(f'Error in config file detected new file created and formated with last known status: {file}')
+			else:
+				print('File currupt:Could not get the last known status')
+				exit()
+
+	else:
+		status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
+		with open(file, "w") as f:
+			f.write(json.dumps(status, indent=4) )
+		print(f'{status_json} does not exit, new file created and formated')
+
+	return status
+
+
+
 if __name__ == '__main__':
 
 ###### GPIO Setup
@@ -298,22 +326,23 @@ if __name__ == '__main__':
 
 ###### Import config file & start processes, Initial setup
 	try:
-		try:
-			if os.path.isfile(status_json):
-				with open(status_json, "r") as f:
-					status = json.load(f)
-				print(f'status json file loaded: {status_json}')
-			else:
-				status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
-				with open(status_json, "w") as f:
-					f.write(json.dumps(status, indent=4) )
-				print(f'{status_json} does not exit, new file created and formated')
-		except:
-			status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
-			with open(status_json, "w") as f:
-				f.write(json.dumps(status, indent=4) )
-			print(f'Config file currupted, new file created and formated: {status_json}')
-			pass
+		# try:
+		status = load_status(status_json)
+			# if os.path.isfile(status_json):
+			# 	with open(status_json, "r") as f:
+			# 		status = json.load(f)
+			# 	print(f'status json file loaded: {status_json}')
+			# else:
+			# 	status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
+			# 	with open(status_json, "w") as f:
+			# 		f.write(json.dumps(status, indent=4) )
+			# 	print(f'{status_json} does not exit, new file created and formated')
+		# except:
+		# 	status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
+		# 	with open(status_json, "w") as f:
+		# 		f.write(json.dumps(status, indent=4) )
+		# 	print(f'Config file currupted, new file created and formated: {status_json}')
+		# 	pass
 		temp_monitor_status = status['temp_monitor']
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
@@ -336,14 +365,19 @@ if __name__ == '__main__':
 ##### Main Code
 
 	while True:
-		try:
-			with open(status_json, "r") as f:
-				status = json.load(f)
-		except:
-			with open(status_json, "w") as f:
-				f.write(json.dumps(status, indent=4) )
-			print(f'Error in config file detected new file created and formated with last known status: {status_json}')
-			pass
+		# try:
+		# 	with open(status_json, "r") as f:
+		# 		status = json.load(f)
+		# except:
+		# 	with open(status_json, "w") as f:
+		# 		f.write(json.dumps(status, indent=4) )
+		# 	print(f'Error in config file detected new file created and formated with last known status: {status_json}')
+		# 	pass
+
+
+		status = load_status(status_json, status)
+
+
 		temp_monitor_status = status['temp_monitor']
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
