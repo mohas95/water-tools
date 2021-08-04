@@ -181,7 +181,7 @@ def get_temp():
 
 			except:
 				print("[Temperature monitor]: Error Initializing Temperature Probe")
-				temp_monitor_status: = None
+				temp_monitor_status = None
 
 		### Process
 		while temp_monitor_status:
