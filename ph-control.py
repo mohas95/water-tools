@@ -160,6 +160,8 @@ def get_temp():
 	global retry_count
 	global temp_monitor_status
 	global sample_frequency
+	success = None
+	count = 0
 
 
 	while temp_monitor_status:
