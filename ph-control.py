@@ -24,7 +24,6 @@ high_ph_thresh = 8 + margin # upper threshold of pH until ph down activates
 low_ph_thresh = 7 - margin # lower threshold of pH until ph down activates
 dose_delay_time = 60 # Delay time between dosages
 dose_on_time = 5 # Length of dose time
-temperature = 25 # Fixed temperature, should be replaced with sensor readings for temp compensation
 retry_count = 10 # number of times process will try to restart until it exits
 status_json = './status.json' #location of the status json file
 refresh_rate = 2 #how often program will check for changes of status from status json file in seconds
@@ -32,6 +31,7 @@ sample_frequency = 1.0 #sample frequency of the ph probe in seconds
 
 ### DO NOT CHANGE THESE VARIABLES (used to pass information between processes)
 PH = None # variable storing PH readings, set to None, when ph monitor is not activated
+temperature = None # Fixed temperature, should be replaced with sensor readings for temp compensation
 ph_up_status = None # variable used to pass on the status of each process determined by the status.json file
 ph_down_status = None # variable used to pass on the status of each process determined by the status.json file
 ph_monitor_status = None# variable used to pass on the status of each process determined by the status.json file
@@ -215,7 +215,7 @@ def get_temp():
 				else:
 					pass
 		temperature = None
-		
+
 def get_PH():
 	'''
 	'''
@@ -256,8 +256,14 @@ def get_PH():
 				#Get the Digital Value of Analog of selected channel
 				ph_voltage = ads1115.readVoltage(ph_probe_ADC)
 				#Convert voltage to PH with temperature compensation
-				print('[PH monitor]: PH Voltage: {}, Temperature: {} ----> '.format(ph_voltage['r'],temperature), end = '')
-				PH = ph.readPH(ph_voltage['r'],temperature)
+
+				if temperature:
+					temp = temperature
+				else:
+					temp = 25
+
+				print('[PH monitor]: PH Voltage: {}, Temperature: {} ----> '.format(ph_voltage['r'],temp), end = '')
+				PH = ph.readPH(ph_voltage['r'],temp)
 				print("PH:{}".format(PH))
 				time.sleep(sample_frequency)
 
