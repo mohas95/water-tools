@@ -186,30 +186,37 @@ def get_temp():
 		### Process
 		while temp_monitor_status:
 			try:
-				f = open(device_file,'r')
-				lines = f.readlines()
-				f.close()
-				# lines = read_temp_raw()
+				with open(device_file, "r") as f:
+					lines = f.readlines()
+
+				# f = open(device_file,'r')
+				# lines = f.readlines()
+				# f.close()
+
 				while lines[0].strip()[-3:] != 'YES':
 					time.sleep(0.2)
-					f = open(device_file, 'r')
-					lines = f.readlines()
-					f.close()
-					# lines = read_temp_raw()
+
+					with open(device_file, "r") as f:
+						lines = f.readlines()
+					# f = open(device_file, 'r')
+					# lines = f.readlines()
+					# f.close()
 				equals_pos = lines[1].find('t=')
 				if equals_pos != -1:
 					temp_string = lines[1][equals_pos+2:]
 					temperature = float(temp_string) / 1000.0
 
-				print("Temperature:{}".format(temperature))
+				print("[Temperature monitor]: Temperature:{}".format(temperature))
+
 				time.sleep(sample_frequency)
 
 				count = 0
+
 			except:
 				temperature = None
 				count += 1
 				tries_left = retry_count-count
-				print(f'[TEMPERATURE monitor]: ERROR trying to Get Temperature data from the sensor, will try {tries_left} more times')
+				print(f'[Temperature monitor]: ERROR trying to Get Temperature data from the sensor, will try {tries_left} more times')
 
 				if count >= retry_count:
 					print("[TEMPERATURE monitor]: Exceeded the number of retries, closing process... Please restart process")
@@ -283,7 +290,7 @@ def get_PH():
 					pass
 		PH = None
 
-
+############## Helper functions
 
 def load_status(file, last_status=None):
 
@@ -326,23 +333,8 @@ if __name__ == '__main__':
 
 ###### Import config file & start processes, Initial setup
 	try:
-		# try:
 		status = load_status(status_json)
-			# if os.path.isfile(status_json):
-			# 	with open(status_json, "r") as f:
-			# 		status = json.load(f)
-			# 	print(f'status json file loaded: {status_json}')
-			# else:
-			# 	status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
-			# 	with open(status_json, "w") as f:
-			# 		f.write(json.dumps(status, indent=4) )
-			# 	print(f'{status_json} does not exit, new file created and formated')
-		# except:
-		# 	status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
-		# 	with open(status_json, "w") as f:
-		# 		f.write(json.dumps(status, indent=4) )
-		# 	print(f'Config file currupted, new file created and formated: {status_json}')
-		# 	pass
+
 		temp_monitor_status = status['temp_monitor']
 		ph_up_status = status['ph_up']
 		ph_down_status = status['ph_down']
@@ -365,17 +357,7 @@ if __name__ == '__main__':
 ##### Main Code
 
 	while True:
-		# try:
-		# 	with open(status_json, "r") as f:
-		# 		status = json.load(f)
-		# except:
-		# 	with open(status_json, "w") as f:
-		# 		f.write(json.dumps(status, indent=4) )
-		# 	print(f'Error in config file detected new file created and formated with last known status: {status_json}')
-		# 	pass
-
 		status = load_status(status_json, status)
-
 
 		temp_monitor_status = status['temp_monitor']
 		ph_up_status = status['ph_up']
@@ -385,6 +367,7 @@ if __name__ == '__main__':
 		print(status)
 
 		time.sleep(refresh_rate)
+
 		if not temp_monitor.is_alive():
 			temp_monitor = threading.Thread(target=get_temp,daemon=True)
 			temp_monitor.start()
