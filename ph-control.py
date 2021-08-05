@@ -421,6 +421,6 @@ if __name__ == '__main__':
 			if not ph_down_control.is_alive():
 				ph_down_control = threading.Thread(target = PH_down,daemon=True)
 				ph_down_control.start()
-	except KeyboardInterrupt:
-		GPIO.cleanup()
+	except:
 		print('Done!')
+		GPIO.cleanup()
