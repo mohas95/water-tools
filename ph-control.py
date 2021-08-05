@@ -27,7 +27,7 @@ dose_delay_time = 60 # Delay time between dosages
 dose_on_time = 5 # Length of dose time
 retry_count = 10 # number of times process will try to restart until it exits
 status_json = './status.json' #location of the status json file
-refresh_rate = 2 #how often program will check for changes of status from status json file in seconds
+refresh_rate = 1 #how often program will check for changes of status from status json file in seconds
 sample_frequency = 1.0 #sample frequency of the ph probe in seconds
 
 ### DO NOT CHANGE THESE VARIABLES (used to pass information between processes)
@@ -70,15 +70,16 @@ def PH_up():
 			success = 1
 		except:
 			print('\n[PH+]: ERROR Initializing PH up doser')
-			ph_up_status = False
 			update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
+			time.sleep(1)
+			ph_up_status = False
 
 
 	### Process
 	while ph_up_status:
 		if not PH:
 			print('[PH+]: Please Enable PH readings')
-			time.sleep(10)
+			time.sleep(5)
 		while PH and ph_up_status:
 			try:
 				raise ValueError('A very specific bad thing happened.')
@@ -101,8 +102,9 @@ def PH_up():
 
 				if count+1 >= retry_count:
 					print("[PH+]: Exceeded the number of retries, closing process... attempting to restart process")
-					ph_up_status = False
 					update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
+					time.sleep(1)
+					ph_up_status = False
 
 				else:
 					pass
@@ -131,8 +133,11 @@ def PH_down():
 			success = 1
 		except:
 			print('\n[PH-]: ERROR Initializing PH down doser')
-			ph_down_status = False
 			update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
+			time.sleep(1)
+			ph_down_status = False
+
+
 
 	### Process
 	while ph_down_status:
@@ -160,8 +165,9 @@ def PH_down():
 
 				if count+1 >= retry_count:
 					print("[PH-]: Exceeded the number of retries, closing process... attempting to restart process")
-					ph_down_status = False
 					update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
+					time.sleep(1)
+					ph_down_status = False
 
 				else:
 					pass
@@ -196,6 +202,8 @@ def get_temp():
 			except:
 				print("[Temperature monitor]: Error Initializing Temperature Probe")
 				update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
+				time.sleep(1)
+				temp_monitor_status=False
 
 		### Process
 		while temp_monitor_status:
@@ -229,8 +237,11 @@ def get_temp():
 
 				if count+1 >= retry_count:
 					print("[TEMPERATURE monitor]: Exceeded the number of retries, closing process... Please restart process")
-					temp_monitor_status = False
+
 					update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
+					time.sleep(1)
+					temp_monitor_status = False
+
 
 				else:
 					pass
@@ -270,8 +281,9 @@ def get_PH():
 			except:
 				print("[PH monitor]: Error Initializing PH Probe, reseting please recalibrate")
 				ph.reset()
-				ph_monitor_status = False
 				update_status(process_status = 'ph_monitor', status_file = status_json, status_value = False)
+				time.sleep(1)
+				ph_monitor_status = False
 
 		### Process
 		while ph_monitor_status:
@@ -301,8 +313,9 @@ def get_PH():
 
 				if count+1 >= retry_count:
 					print("[PH monitor]: Exceeded the number of retries, closing process... Please restart process")
-					ph_monitor_status = False
 					update_status(process_status = 'ph_monitor', status_file = status_json, status_value = False)
+					time.sleep(1)
+					ph_monitor_status = False
 
 				else:
 					pass
