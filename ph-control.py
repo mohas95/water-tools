@@ -12,14 +12,14 @@ from DFRobot_PH import DFRobot_PH
 
 import threading
 
-################################################## Define RPI Pins
+############################################################ Define RPI Pins
 ph_up = 26 # Relay_Ch1 = 26
 ph_down = 20 # Relay_Ch2 = 20
 # Relay_Ch3 = 21
 ph_probe_ADC = 0 #Analog 0 pin on the as1115 ADC
 AS1115_I2C_ADR = 0x48 # address of the I2C AS1115 ADC
 
-################################################# Define Global variables
+############################################################ Define Global variables
 margin = 0.5 # margin of sensitivity for the PH Threshold
 high_ph_thresh = 8 + margin # upper threshold of pH until ph down activates
 low_ph_thresh = 7 - margin # lower threshold of pH until ph down activates
@@ -45,7 +45,7 @@ ADS1115_REG_CONFIG_PGA_1_024V        = 0x06 # 1.024V range = Gain 4
 ADS1115_REG_CONFIG_PGA_0_512V        = 0x08 # 0.512V range = Gain 8
 ADS1115_REG_CONFIG_PGA_0_256V        = 0x0A # 0.256V range = Gain 16
 
-################################################# Process Functions
+############################################################ Process Functions
 
 def PH_up():
 	'''
@@ -74,7 +74,6 @@ def PH_up():
 			update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
 			time.sleep(refresh_rate*2)
 			ph_up_status = False
-
 
 	### Process
 	while ph_up_status:
@@ -138,8 +137,6 @@ def PH_down():
 			time.sleep(refresh_rate*2)
 			ph_down_status = False
 
-
-
 	### Process
 	while ph_down_status:
 		if not PH:
@@ -185,7 +182,6 @@ def get_temp():
 	success = None
 	count = 0
 
-
 	while temp_monitor_status:
 		### Sensor Setup
 		while success == None and temp_monitor_status:
@@ -224,7 +220,6 @@ def get_temp():
 					temperature = float(temp_string) / 1000.0
 
 				print("[Temperature monitor]: Temperature:{}".format(temperature))
-
 				time.sleep(sample_frequency)
 
 				count = 0
@@ -242,7 +237,6 @@ def get_temp():
 					update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
 					time.sleep(refresh_rate*2)
 					temp_monitor_status = False
-
 
 				else:
 					pass
@@ -306,6 +300,7 @@ def get_PH():
 				time.sleep(sample_frequency)
 
 				count = 0
+
 			except:
 				PH = None
 				count += 1
@@ -323,7 +318,7 @@ def get_PH():
 					pass
 		PH = None
 
-############## Helper functions
+############################################################ Helper functions
 
 def load_status(file, last_status=None):
 
@@ -358,6 +353,7 @@ def update_status(process_status, status_file ='./status.json', status_value = F
 	with open(status_file, "w") as f:
 		f.write(json.dumps(status, indent=4))
 
+############################################################ Main Process
 if __name__ == '__main__':
 
 ###### GPIO Setup
