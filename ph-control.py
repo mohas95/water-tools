@@ -261,7 +261,7 @@ def get_PH():
 	global sample_frequency
 	global status_json
 	global refresh_rate
-	
+
 	success = None
 	count = 0
 
@@ -331,7 +331,7 @@ def load_status(file, last_status=None):
 		try:
 			with open(status_json, "r") as f:
 				status = json.load(f)
-			print(f'status json file loaded: {status_json}')
+			# print(f'status json file loaded: {status_json}')
 		except:
 			if last_status:
 				status = last_status
@@ -357,9 +357,6 @@ def update_status(process_status, status_file ='./status.json', status_value = F
 
 	with open(status_file, "w") as f:
 		f.write(json.dumps(status, indent=4))
-
-
-
 
 if __name__ == '__main__':
 
