@@ -74,7 +74,7 @@ def PH_up():
 		try:
 			GPIO.setup(ph_up,GPIO.OUT)
 			GPIO.output(ph_up, GPIO.HIGH)
-			process_logger.warning('Initialized PH up doser')
+			process_logger.error('Initialized PH up doser')
 			# print('\n[PH+]: Initialized PH up doser')
 			success = 1
 		except:
