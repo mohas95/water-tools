@@ -74,8 +74,8 @@ def PH_up():
 		try:
 			GPIO.setup(ph_up,GPIO.OUT)
 			GPIO.output(ph_up, GPIO.HIGH)
-			process_logger.error('Initialized PH up doser')
-			# print('\n[PH+]: Initialized PH up doser')
+			# process_logger.error('Initialized PH up doser')
+			print('\n[PH+]: Initialized PH up doser')
 			success = 1
 		except:
 			print('\n[PH+]: ERROR Initializing PH up doser')
@@ -130,6 +130,8 @@ def PH_down():
 	global ph_down_status
 	global status_json
 	global refresh_rate
+	global process_logger
+
 	success = None
 	count = 0
 
@@ -192,6 +194,8 @@ def get_temp():
 	global temp_monitor_status
 	global sample_frequency
 	global refresh_rate
+	global process_logger
+
 	success = None
 	count = 0
 
@@ -268,6 +272,8 @@ def get_PH():
 	global sample_frequency
 	global status_json
 	global refresh_rate
+	global process_logger
+	
 	success = None
 	count = 0
 
