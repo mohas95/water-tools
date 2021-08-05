@@ -30,8 +30,11 @@ retry_count = 10 # number of times process will try to restart until it exits
 refresh_rate = 1 #how often program will check for changes of status from status json file in seconds
 sample_frequency = 1.0 #sample frequency of the ph probe in seconds
 status_json = './status.json' #location of the status json file
-# status_log = './logs/status.log'
-logging.basicConfig(filename='./logs/process.log', level=logging.INFO, format = '%(asctime)s %(thread)d %(threadName)s %(levelname)s %(funcName)s %(message)s')
+status_log = './logs/status.log'
+process_log = './logs/process.log'
+status_logger = setup_logger('status_log', status_log, level = logging.INFO)
+process_logger = setup_logger('process_log', process_log, level = logging.INFO)
+# logging.basicConfig(filename='./logs/process.log', level=logging.INFO, format = '%(asctime)s %(thread)d %(threadName)s %(levelname)s %(funcName)s %(message)s')
 
 
 ### DO NOT CHANGE THESE VARIABLES (used to pass information between processes)
@@ -63,6 +66,7 @@ def PH_up():
 	global retry_count
 	global ph_up_status
 	global refresh_rate
+	global process_logger
 	success = None
 	count = 0
 
@@ -71,7 +75,7 @@ def PH_up():
 		try:
 			GPIO.setup(ph_up,GPIO.OUT)
 			GPIO.output(ph_up, GPIO.HIGH)
-			logging.info('Initialized PH up doser')
+			process_logger.info('Initialized PH up doser')
 			# print('\n[PH+]: Initialized PH up doser')
 			success = 1
 		except:
@@ -362,6 +366,19 @@ def update_status(process_status, status_file ='./status.json', status_value = F
 	with open(status_file, "w") as f:
 		f.write(json.dumps(status, indent=4))
 
+def setup_logger(name, log_file, level=logging.INFO):
+    """To setup as many loggers as you want"""
+	formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+
+    handler = logging.FileHandler(log_file)
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+    return logger
+
 ############################################################ Main Process
 if __name__ == '__main__':
 
@@ -388,7 +405,6 @@ if __name__ == '__main__':
 		ph_monitor = threading.Thread(target=get_PH,daemon=True)
 		ph_up_control = threading.Thread(target = PH_up,daemon=True)
 		ph_down_control = threading.Thread(target = PH_down,daemon=True)
-
 
 		temp_monitor.start()
 		ph_monitor.start()
