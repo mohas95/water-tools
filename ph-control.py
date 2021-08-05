@@ -58,6 +58,7 @@ def PH_up():
 	global dose_on_time
 	global retry_count
 	global ph_up_status
+	global refresh_rate
 	success = None
 	count = 0
 
@@ -71,7 +72,7 @@ def PH_up():
 		except:
 			print('\n[PH+]: ERROR Initializing PH up doser')
 			update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
-			time.sleep(1)
+			time.sleep(refresh_rate*2)
 			ph_up_status = False
 
 
@@ -102,7 +103,7 @@ def PH_up():
 				if count+1 >= retry_count:
 					print("[PH+]: Exceeded the number of retries, closing process... attempting to restart process")
 					update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
-					time.sleep(1)
+					time.sleep(refresh_rate*2)
 					ph_up_status = False
 
 				else:
@@ -119,6 +120,8 @@ def PH_down():
 	global retry_count
 	global ph_down_status
 	global status_json
+	global refresh_rate
+
 	success = None
 	count = 0
 
@@ -132,7 +135,7 @@ def PH_down():
 		except:
 			print('\n[PH-]: ERROR Initializing PH down doser')
 			update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
-			time.sleep(1)
+			time.sleep(refresh_rate*2)
 			ph_down_status = False
 
 
@@ -164,7 +167,7 @@ def PH_down():
 				if count+1 >= retry_count:
 					print("[PH-]: Exceeded the number of retries, closing process... attempting to restart process")
 					update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
-					time.sleep(1)
+					time.sleep(refresh_rate*2)
 					ph_down_status = False
 
 				else:
@@ -178,6 +181,7 @@ def get_temp():
 	global retry_count
 	global temp_monitor_status
 	global sample_frequency
+	global refresh_rate
 	success = None
 	count = 0
 
@@ -199,7 +203,7 @@ def get_temp():
 			except:
 				print("[Temperature monitor]: Error Initializing Temperature Probe")
 				update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
-				time.sleep(1)
+				time.sleep(refresh_rate*2)
 				temp_monitor_status=False
 
 		### Process
@@ -236,7 +240,7 @@ def get_temp():
 					print("[TEMPERATURE monitor]: Exceeded the number of retries, closing process... Please restart process")
 
 					update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
-					time.sleep(1)
+					time.sleep(refresh_rate*2)
 					temp_monitor_status = False
 
 
@@ -256,6 +260,8 @@ def get_PH():
 	global ph_monitor_status
 	global sample_frequency
 	global status_json
+	global refresh_rate
+	
 	success = None
 	count = 0
 
@@ -279,7 +285,7 @@ def get_PH():
 				print("[PH monitor]: Error Initializing PH Probe, reseting please recalibrate")
 				ph.reset()
 				update_status(process_status = 'ph_monitor', status_file = status_json, status_value = False)
-				time.sleep(1)
+				time.sleep(refresh_rate*2)
 				ph_monitor_status = False
 
 		### Process
@@ -310,7 +316,7 @@ def get_PH():
 				if count+1 >= retry_count:
 					print("[PH monitor]: Exceeded the number of retries, closing process... Please restart process")
 					update_status(process_status = 'ph_monitor', status_file = status_json, status_value = False)
-					time.sleep(1)
+					time.sleep(refresh_rate*2)
 					ph_monitor_status = False
 
 				else:
