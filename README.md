@@ -60,6 +60,7 @@
 - Logging over print statements (log files)
 - json files for api
 - Turn this into a class structure for replicability/ abstraction (objectify)
+- add liscence
 
 ### resolved
 - add temperature sensor for temperature compensation
