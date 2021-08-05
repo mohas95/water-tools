@@ -32,8 +32,7 @@ sample_frequency = 1.0 #sample frequency of the ph probe in seconds
 status_json = './status.json' #location of the status json file
 status_log = './logs/status.log'
 process_log = './logs/process.log'
-status_logger = setup_logger('status_log', status_log, level = logging.INFO)
-process_logger = setup_logger('process_log', process_log, level = logging.INFO)
+
 # logging.basicConfig(filename='./logs/process.log', level=logging.INFO, format = '%(asctime)s %(thread)d %(threadName)s %(levelname)s %(funcName)s %(message)s')
 
 
@@ -381,6 +380,8 @@ def setup_logger(name, log_file, level=logging.INFO):
 
 ############################################################ Main Process
 if __name__ == '__main__':
+	status_logger = setup_logger('status_log', status_log, level = logging.INFO)
+	process_logger = setup_logger('process_log', process_log, level = logging.INFO)
 
 ###### GPIO Setup
 	try:
