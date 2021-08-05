@@ -348,7 +348,7 @@ def load_status(file, last_status=None):
 def update_status(process_status, status_file ='./status.json', status_value = False):
 	status = load_status(status_file)
 	status[process_status] = status_value
-	print(status)
+	# print(status)
 
 	with open(status_file, "w") as f:
 		f.write(json.dumps(status, indent=4))
