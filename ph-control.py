@@ -367,17 +367,17 @@ def update_status(process_status, status_file ='./status.json', status_value = F
 		f.write(json.dumps(status, indent=4))
 
 def setup_logger(name, log_file, level=logging.INFO):
-    """To setup as many loggers as you want"""
+	"""To setup as many loggers as you want"""
 	formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 
-    handler = logging.FileHandler(log_file)
-    handler.setFormatter(formatter)
+	handler = logging.FileHandler(log_file)
+	handler.setFormatter(formatter)
 
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
+	logger = logging.getLogger(name)
+	logger.setLevel(level)
+	logger.addHandler(handler)
 
-    return logger
+	return logger
 
 ############################################################ Main Process
 if __name__ == '__main__':
