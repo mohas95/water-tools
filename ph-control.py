@@ -31,6 +31,7 @@ refresh_rate = 1 #how often program will check for changes of status from status
 sample_frequency = 1.0 #sample frequency of the ph probe in seconds
 status_json = './status.json' #location of the status json file
 # status_log = './logs/status.log'
+logging.basicConfig(filename='./logs/process.log', level=logging.DEBUG, format = '%(asctime)s %(thread)d %(threadName)s %(levelname)s %(funcName)s %(message)s')
 
 
 ### DO NOT CHANGE THESE VARIABLES (used to pass information between processes)
@@ -388,7 +389,6 @@ if __name__ == '__main__':
 		ph_up_control = threading.Thread(target = PH_up,daemon=True)
 		ph_down_control = threading.Thread(target = PH_down,daemon=True)
 
-		logging.basicConfig(filename='./logs/process.log', level=logging.DEBUG, format = '%(asctime)s %(thread)d %(threadName)s %(levelname)s %(funcName)s %(message)s')
 
 		temp_monitor.start()
 		ph_monitor.start()
