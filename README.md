@@ -54,9 +54,11 @@
 -  this file saves the Calibration parameters of the DFRobot PH sensor
 
 ## Issues
-
 - MQTT communication for UI control
 - Calibration protocol
 - Service file
-- PH Logging
+- Logging over print statements (log files)
+- json files for api
+
+### resolved
 - add temperature sensor for temperature compensation
