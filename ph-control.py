@@ -122,7 +122,6 @@ def PH_down():
 	global ph_down_status
 	global status_json
 	global refresh_rate
-
 	success = None
 	count = 0
 
@@ -261,7 +260,6 @@ def get_PH():
 	global sample_frequency
 	global status_json
 	global refresh_rate
-
 	success = None
 	count = 0
 
