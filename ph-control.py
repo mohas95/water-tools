@@ -422,5 +422,5 @@ if __name__ == '__main__':
 				ph_down_control = threading.Thread(target = PH_down,daemon=True)
 				ph_down_control.start()
 	except:
-		print('Done!')
+		print('\nDone!')
 		GPIO.cleanup()
