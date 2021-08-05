@@ -81,6 +81,7 @@ def PH_up():
 			time.sleep(10)
 		while PH and ph_up_status:
 			try:
+				raise ValueError('A very specific bad thing happened.')
 				if PH < low_ph_thresh:
 					print(f'[PH+]: {PH} lower than threashold, activating pump')
 					GPIO.output(ph_up, GPIO.LOW)
@@ -96,10 +97,13 @@ def PH_up():
 				count += 1
 				tries_left = retry_count-count
 				print(f'[PH+]: ERROR in PH Up control, will try {tries_left} more times')
+				time.sleep(1)
 
-				if count >= retry_count:
+				if count+1 >= retry_count:
 					print("[PH+]: Exceeded the number of retries, closing process... attempting to restart process")
 					ph_up_status = False
+					update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
+
 				else:
 					pass
 
@@ -120,6 +124,7 @@ def PH_down():
 	### GPIO Setup
 	while success==None and ph_down_status:
 		try:
+			raise ValueError('A very specific bad thing happened.')
 			GPIO.setup(ph_down,GPIO.OUT)
 			GPIO.output(ph_down, GPIO.HIGH)
 			print('\n[PH-]: Initialized PH down doser')
@@ -151,8 +156,9 @@ def PH_down():
 				count += 1
 				tries_left = retry_count-count
 				print(f'[PH-]: ERROR in PH down control, will try {tries_left} more times')
+				time.sleep(1)
 
-				if count >= retry_count:
+				if count+1 >= retry_count:
 					print("[PH-]: Exceeded the number of retries, closing process... attempting to restart process")
 					ph_down_status = False
 					update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
@@ -176,6 +182,7 @@ def get_temp():
 		### Sensor Setup
 		while success == None and temp_monitor_status:
 			try:
+				raise ValueError('A very specific bad thing happened.')
 				# Settings for the RTD temperature probe
 				os.system('modprobe w1-gpio')
 				os.system('modprobe w1-therm')
@@ -218,8 +225,9 @@ def get_temp():
 				count += 1
 				tries_left = retry_count-count
 				print(f'[Temperature monitor]: ERROR trying to Get Temperature data from the sensor, will try {tries_left} more times')
+				time.sleep(1)
 
-				if count >= retry_count:
+				if count+1 >= retry_count:
 					print("[TEMPERATURE monitor]: Exceeded the number of retries, closing process... Please restart process")
 					temp_monitor_status = False
 					update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
@@ -291,7 +299,7 @@ def get_PH():
 				print(f'[PH monitor]: ERROR trying to Get PH data from the sensor, will try {tries_left} more times')
 				time.sleep(1)
 
-				if count >= retry_count:
+				if count+1 >= retry_count:
 					print("[PH monitor]: Exceeded the number of retries, closing process... Please restart process")
 					ph_monitor_status = False
 					update_status(process_status = 'ph_monitor', status_file = status_json, status_value = False)
