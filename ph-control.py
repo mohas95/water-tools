@@ -289,6 +289,7 @@ def get_PH():
 				count += 1
 				tries_left = retry_count-count
 				print(f'[PH monitor]: ERROR trying to Get PH data from the sensor, will try {tries_left} more times')
+				time.sleep(1)
 
 				if count >= retry_count:
 					print("[PH monitor]: Exceeded the number of retries, closing process... Please restart process")
