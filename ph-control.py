@@ -268,7 +268,7 @@ def get_PH():
 		### Process
 		while ph_monitor_status:
 			try:
-				induce error
+				raise ValueError('A very specific bad thing happened.')
 				#Get the Digital Value of Analog of selected channel
 				ph_voltage = ads1115.readVoltage(ph_probe_ADC)
 				#Convert voltage to PH with temperature compensation
