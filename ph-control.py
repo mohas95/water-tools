@@ -6,6 +6,7 @@ import time
 import json
 import os.path
 import glob
+import logging
 
 from DFRobot_ADS1115 import ADS1115
 from DFRobot_PH import DFRobot_PH
@@ -26,9 +27,12 @@ low_ph_thresh = 7 - margin # lower threshold of pH until ph down activates
 dose_delay_time = 60 # Delay time between dosages
 dose_on_time = 5 # Length of dose time
 retry_count = 10 # number of times process will try to restart until it exits
-status_json = './status.json' #location of the status json file
 refresh_rate = 1 #how often program will check for changes of status from status json file in seconds
 sample_frequency = 1.0 #sample frequency of the ph probe in seconds
+status_json = './status.json' #location of the status json file
+status_log = './logs/status.log'
+process_log = './logs/process.log'
+
 
 ### DO NOT CHANGE THESE VARIABLES (used to pass information between processes)
 PH = None # variable storing PH readings, set to None, when ph monitor is not activated
@@ -67,7 +71,8 @@ def PH_up():
 		try:
 			GPIO.setup(ph_up,GPIO.OUT)
 			GPIO.output(ph_up, GPIO.HIGH)
-			print('\n[PH+]: Initialized PH up doser')
+			process_logger.info('Initialized PH up doser')
+			# print('\n[PH+]: Initialized PH up doser')
 			success = 1
 		except:
 			print('\n[PH+]: ERROR Initializing PH up doser')
@@ -357,6 +362,20 @@ def update_status(process_status, status_file ='./status.json', status_value = F
 	with open(status_file, "w") as f:
 		f.write(json.dumps(status, indent=4))
 
+def setup_logger(name, log_file, level=logging.INFO):
+    """To setup as many loggers as you want"""
+
+	formatter = logging.Formatter('%(asctime)s %(thread)d %(threadName)s %(funcName)s %(levelname)s %(message)s')
+
+    handler = logging.FileHandler(log_file)
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+    return logger
+
 ############################################################ Main Process
 if __name__ == '__main__':
 
@@ -388,6 +407,9 @@ if __name__ == '__main__':
 		ph_monitor.start()
 		ph_up_control.start()
 		ph_down_control.start()
+		status_logger = setup_logger('main_status_log', status_log ,level=logging.DEBUG)
+		process_logger = setup_logger('process_log', process_log ,level=logging.DEBUG)
+
 
 	except:
 		print('\nCould not open or create json file of the processes')
