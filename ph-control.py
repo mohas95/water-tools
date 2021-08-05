@@ -82,7 +82,6 @@ def PH_up():
 			time.sleep(5)
 		while PH and ph_up_status:
 			try:
-				raise ValueError('A very specific bad thing happened.')
 				if PH < low_ph_thresh:
 					print(f'[PH+]: {PH} lower than threashold, activating pump')
 					GPIO.output(ph_up, GPIO.LOW)
@@ -126,7 +125,6 @@ def PH_down():
 	### GPIO Setup
 	while success==None and ph_down_status:
 		try:
-			raise ValueError('A very specific bad thing happened.')
 			GPIO.setup(ph_down,GPIO.OUT)
 			GPIO.output(ph_down, GPIO.HIGH)
 			print('\n[PH-]: Initialized PH down doser')
@@ -188,7 +186,6 @@ def get_temp():
 		### Sensor Setup
 		while success == None and temp_monitor_status:
 			try:
-				raise ValueError('A very specific bad thing happened.')
 				# Settings for the RTD temperature probe
 				os.system('modprobe w1-gpio')
 				os.system('modprobe w1-therm')
@@ -288,7 +285,6 @@ def get_PH():
 		### Process
 		while ph_monitor_status:
 			try:
-				raise ValueError('A very specific bad thing happened.')
 				#Get the Digital Value of Analog of selected channel
 				ph_voltage = ads1115.readVoltage(ph_probe_ADC)
 				#Convert voltage to PH with temperature compensation
