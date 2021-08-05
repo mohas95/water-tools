@@ -70,7 +70,9 @@ def PH_up():
 			success = 1
 		except:
 			print('\n[PH+]: ERROR Initializing PH up doser')
-			pass
+			ph_up_status = False
+			update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
+
 
 	### Process
 	while ph_up_status:
@@ -111,6 +113,7 @@ def PH_down():
 	global dose_on_time
 	global retry_count
 	global ph_down_status
+	global status_json
 	success = None
 	count = 0
 
@@ -123,7 +126,8 @@ def PH_down():
 			success = 1
 		except:
 			print('\n[PH-]: ERROR Initializing PH down doser')
-			pass
+			ph_down_status = False
+			update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
 
 	### Process
 	while ph_down_status:
@@ -151,12 +155,15 @@ def PH_down():
 				if count >= retry_count:
 					print("[PH-]: Exceeded the number of retries, closing process... attempting to restart process")
 					ph_down_status = False
+					update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
+
 				else:
 					pass
 
 def get_temp():
 	'''
 	'''
+	global status_json
 	global temperature
 	global retry_count
 	global temp_monitor_status
@@ -181,7 +188,7 @@ def get_temp():
 
 			except:
 				print("[Temperature monitor]: Error Initializing Temperature Probe")
-				temp_monitor_status = None
+				update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
 
 		### Process
 		while temp_monitor_status:
@@ -189,18 +196,12 @@ def get_temp():
 				with open(device_file, "r") as f:
 					lines = f.readlines()
 
-				# f = open(device_file,'r')
-				# lines = f.readlines()
-				# f.close()
-
 				while lines[0].strip()[-3:] != 'YES':
 					time.sleep(0.2)
 
 					with open(device_file, "r") as f:
 						lines = f.readlines()
-					# f = open(device_file, 'r')
-					# lines = f.readlines()
-					# f.close()
+
 				equals_pos = lines[1].find('t=')
 				if equals_pos != -1:
 					temp_string = lines[1][equals_pos+2:]
@@ -221,8 +222,11 @@ def get_temp():
 				if count >= retry_count:
 					print("[TEMPERATURE monitor]: Exceeded the number of retries, closing process... Please restart process")
 					temp_monitor_status = False
+					update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
+
 				else:
 					pass
+
 		temperature = None
 
 def get_PH():
@@ -235,6 +239,7 @@ def get_PH():
 	global AS1115_I2C_ADR
 	global ph_monitor_status
 	global sample_frequency
+	global status_json
 	success = None
 	count = 0
 
@@ -257,7 +262,8 @@ def get_PH():
 			except:
 				print("[PH monitor]: Error Initializing PH Probe, reseting please recalibrate")
 				ph.reset()
-				pass
+				ph_monitor_status = False
+				update_status(process_status = 'ph_monitor', status_file = status_json, status_value = False)
 
 		### Process
 		while ph_monitor_status:
@@ -286,6 +292,8 @@ def get_PH():
 				if count >= retry_count:
 					print("[PH monitor]: Exceeded the number of retries, closing process... Please restart process")
 					ph_monitor_status = False
+					update_status(process_status = 'ph_monitor', status_file = status_json, status_value = False)
+
 				else:
 					pass
 		PH = None
@@ -316,6 +324,14 @@ def load_status(file, last_status=None):
 		print(f'{status_json} does not exit, new file created and formated')
 
 	return status
+
+def update_status(process_status, status_file ='./status.json', status_value = False):
+	status = load_status(status_file)
+	status[process_status] = status_value
+
+	with open(status_file, "w") as f:
+		f.write(json.dumps(status, indent=4))
+
 
 
 
