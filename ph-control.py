@@ -6,6 +6,7 @@ import time
 import json
 import os.path
 import glob
+import logging
 
 from DFRobot_ADS1115 import ADS1115
 from DFRobot_PH import DFRobot_PH
@@ -29,8 +30,8 @@ retry_count = 10 # number of times process will try to restart until it exits
 refresh_rate = 1 #how often program will check for changes of status from status json file in seconds
 sample_frequency = 1.0 #sample frequency of the ph probe in seconds
 status_json = './status.json' #location of the status json file
-status_log = './logs/status.log'
-process_log = './logs/process.log'
+# status_log = './logs/status.log'
+logging.basicConfig(filename='./logs/process.log', level=logging.DEBUG, format = '%(asctime)s %(thread)d %(threadName)s %(levelname)s %(funcName)s %(message)s')
 
 
 ### DO NOT CHANGE THESE VARIABLES (used to pass information between processes)
@@ -70,7 +71,8 @@ def PH_up():
 		try:
 			GPIO.setup(ph_up,GPIO.OUT)
 			GPIO.output(ph_up, GPIO.HIGH)
-			print('\n[PH+]: Initialized PH up doser')
+			logging.info('Initialized PH up doser')
+			# print('\n[PH+]: Initialized PH up doser')
 			success = 1
 		except:
 			print('\n[PH+]: ERROR Initializing PH up doser')
