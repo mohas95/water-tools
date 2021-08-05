@@ -35,8 +35,8 @@ PH = None # variable storing PH readings, set to None, when ph monitor is not ac
 temperature = None # Fixed temperature, should be replaced with sensor readings for temp compensation
 ph_up_status = None # variable used to pass on the status of each process determined by the status.json file
 ph_down_status = None # variable used to pass on the status of each process determined by the status.json file
-ph_monitor_status = None# variable used to pass on the status of each process determined by the status.json file
-temp_monitor_status = None
+ph_monitor_status = None # variable used to pass on the status of each process determined by the status.json file
+temp_monitor_status = None # variable used to pass on the status of each process determined by the status.json file
 
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
@@ -94,6 +94,7 @@ def PH_up():
 				else:
 					pass
 			except:
+				GPIO.output(ph_up, GPIO.HIGH) #just incase turn off pump
 				count += 1
 				tries_left = retry_count-count
 				print(f'[PH+]: ERROR in PH Up control, will try {tries_left} more times')
@@ -107,6 +108,7 @@ def PH_up():
 
 				else:
 					pass
+		GPIO.output(ph_up, GPIO.HIGH) #just incase turn off pump
 
 def PH_down():
 	'''
@@ -141,7 +143,7 @@ def PH_down():
 	while ph_down_status:
 		if not PH:
 			print('[PH-]: Please Enable PH readings')
-			time.sleep(10)
+			time.sleep(5)
 		while PH and ph_down_status:
 			try:
 				if PH > high_ph_thresh:
@@ -156,6 +158,7 @@ def PH_down():
 				else:
 					pass
 			except:
+				GPIO.output(ph_down, GPIO.HIGH)
 				count += 1
 				tries_left = retry_count-count
 				print(f'[PH-]: ERROR in PH down control, will try {tries_left} more times')
@@ -169,6 +172,9 @@ def PH_down():
 
 				else:
 					pass
+
+		GPIO.output(ph_down, GPIO.HIGH)
+
 
 def get_temp():
 	'''
@@ -415,3 +421,6 @@ if __name__ == '__main__':
 		if not ph_down_control.is_alive():
 			ph_down_control = threading.Thread(target = PH_down,daemon=True)
 			ph_down_control.start()
+
+	print('Done!')
+	GPIO.cleanup()
