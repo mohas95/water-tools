@@ -77,7 +77,7 @@ def PH_up():
 			process_logger.info('\n[PH+]: Initialized PH up doser')
 			success = 1
 		except:
-			process_logger.warn('\n[PH+]: ERROR Initializing PH up doser')
+			process_logger.warning('\n[PH+]: ERROR Initializing PH up doser')
 			update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
 			time.sleep(refresh_rate*2)
 			ph_up_status = False
@@ -85,7 +85,7 @@ def PH_up():
 	### Process
 	while ph_up_status:
 		if not PH:
-			process_logger.warn('[PH+]: Please Enable PH readings')
+			process_logger.warning('[PH+]: Please Enable PH readings')
 			time.sleep(5)
 		while PH and ph_up_status:
 			try:
@@ -104,11 +104,11 @@ def PH_up():
 				GPIO.output(ph_up, GPIO.HIGH) #just incase turn off pump
 				count += 1
 				tries_left = retry_count-count
-				process_logger.warn(f'[PH+]: ERROR in PH Up control, will try {tries_left} more times')
+				process_logger.warning(f'[PH+]: ERROR in PH Up control, will try {tries_left} more times')
 				time.sleep(1)
 
 				if count+1 >= retry_count:
-					process_logger.warn("[PH+]: Exceeded the number of retries, closing process... attempting to restart process")
+					process_logger.warning("[PH+]: Exceeded the number of retries, closing process... attempting to restart process")
 					update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
 					time.sleep(refresh_rate*2)
 					ph_up_status = False
@@ -142,7 +142,7 @@ def PH_down():
 			process_logger.info('\n[PH-]: Initialized PH down doser')
 			success = 1
 		except:
-			process_logger.warn('\n[PH-]: ERROR Initializing PH down doser')
+			process_logger.warning('\n[PH-]: ERROR Initializing PH down doser')
 			update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
 			time.sleep(refresh_rate*2)
 			ph_down_status = False
@@ -150,7 +150,7 @@ def PH_down():
 	### Process
 	while ph_down_status:
 		if not PH:
-			process_logger.warn('[PH-]: Please Enable PH readings')
+			process_logger.warning('[PH-]: Please Enable PH readings')
 			time.sleep(5)
 		while PH and ph_down_status:
 			try:
@@ -169,11 +169,11 @@ def PH_down():
 				GPIO.output(ph_down, GPIO.HIGH)
 				count += 1
 				tries_left = retry_count-count
-				process_logger.warn(f'[PH-]: ERROR in PH down control, will try {tries_left} more times')
+				process_logger.warning(f'[PH-]: ERROR in PH down control, will try {tries_left} more times')
 				time.sleep(1)
 
 				if count+1 >= retry_count:
-					process_logger.warn("[PH-]: Exceeded the number of retries, closing process... attempting to restart process")
+					process_logger.warning("[PH-]: Exceeded the number of retries, closing process... attempting to restart process")
 					update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
 					time.sleep(refresh_rate*2)
 					ph_down_status = False
@@ -213,7 +213,7 @@ def get_temp():
 				success = 1
 
 			except:
-				process_logger.warn("[Temperature monitor]: Error Initializing Temperature Probe")
+				process_logger.warning("[Temperature monitor]: Error Initializing Temperature Probe")
 				update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
 				time.sleep(refresh_rate*2)
 				temp_monitor_status=False
@@ -244,7 +244,7 @@ def get_temp():
 				temperature = None
 				count += 1
 				tries_left = retry_count-count
-				process_logger.warn(f'[Temperature monitor]: ERROR trying to Get Temperature data from the sensor, will try {tries_left} more times')
+				process_logger.warning(f'[Temperature monitor]: ERROR trying to Get Temperature data from the sensor, will try {tries_left} more times')
 				time.sleep(1)
 
 				if count+1 >= retry_count:
@@ -322,7 +322,7 @@ def get_PH():
 				PH = None
 				count += 1
 				tries_left = retry_count-count
-				process_logger.warn(f'[PH monitor]: ERROR trying to Get PH data from the sensor, will try {tries_left} more times')
+				process_logger.warning(f'[PH monitor]: ERROR trying to Get PH data from the sensor, will try {tries_left} more times')
 				time.sleep(1)
 
 				if count+1 >= retry_count:
@@ -349,7 +349,7 @@ def load_status(file, last_status=None):
 				status = last_status
 				with open(status_json, "w") as f:
 					f.write(json.dumps(status, indent=4) )
-				status_logger.warn(f'Error in config file detected new file created and formated with last known status: {file}')
+				status_logger.warning(f'Error in config file detected new file created and formated with last known status: {file}')
 			else:
 				status_logger.error('File currupt:Could not get the last known status')
 				exit()
@@ -358,7 +358,7 @@ def load_status(file, last_status=None):
 		status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
 		with open(file, "w") as f:
 			f.write(json.dumps(status, indent=4) )
-		status_logger.warn(f'{status_json} does not exit, new file created and formated')
+		status_logger.warning(f'{status_json} does not exit, new file created and formated')
 
 	return status
 
