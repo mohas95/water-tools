@@ -411,8 +411,8 @@ if __name__ == '__main__':
 			ph_down_status = status['ph_down']
 			ph_monitor_status = status['ph_monitor']
 
-			# print(status)
-			status_logger.info(status)
+			print(status)
+			# status_logger.info(status)
 
 			time.sleep(refresh_rate)
 
