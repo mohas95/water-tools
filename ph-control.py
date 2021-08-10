@@ -2,6 +2,7 @@ import sys
 sys.path.append('./DFRobot')
 
 import RPi.GPIO as GPIO
+import threading
 import time
 import json
 import os.path
@@ -10,7 +11,6 @@ import glob
 from DFRobot_ADS1115 import ADS1115
 from DFRobot_PH import DFRobot_PH
 
-import threading
 import logging
 import logzero
 from logzero import logger, setup_logger
