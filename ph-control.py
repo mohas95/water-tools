@@ -368,8 +368,6 @@ def update_status(process_status, status_file ='./status.json', status_value = F
 
 ############################################################ Main Process
 if __name__ == '__main__':
-	status_logger = setup_logger('status_log', status_log, level = logging.INFO)
-	process_logger = setup_logger('process_log', process_log, level = logging.INFO)
 
 ###### GPIO Setup
 	try:
