@@ -16,8 +16,8 @@ import logzero
 from logzero import logger, setup_logger
 format = '%(color)s[%(levelname)1.1s %(asctime)s %(module)s:%(funcName)s %(thread)d]%(end_color)s %(message)s'
 formatter = logzero.LogFormatter(fmt=format)
-process_logger = setup_logger(name=__name__+"process_logger", logfile="./logs/process.log", level=10)
-status_logger = setup_logger(name=__name__+"status_logger", logfile="./logs/status.log", level=10)
+process_logger = setup_logger(name=__name__+"process_logger", logfile="./logs/process.log", level=10, formatter = formatter)
+status_logger = setup_logger(name=__name__+"status_logger", logfile="./logs/status.log", level=10, formatter = formatter)
 
 ############################################################ Define RPI Pins
 ph_up = 26 # Relay_Ch1 = 26
