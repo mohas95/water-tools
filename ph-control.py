@@ -379,7 +379,7 @@ def update_status(process_status, status_file ='./status.json', status_value = F
 
 def update_api(api_file, data):
 
-	timestamp = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S %z')
+	timestamp = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
 
 	data["last updated"] = timestamp
 

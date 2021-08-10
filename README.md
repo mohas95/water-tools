@@ -11,7 +11,6 @@
 - sudo apt ugrade
 - sudo apt autoremove
 
-
 ### System libraries
 - sudo apt-get install wiringpi
 - wget https://project-downloads.drogon.net/wiringpi-latest.deb
@@ -48,15 +47,19 @@
 ## Configuration and user control files
 ### ./status.json
 - this file will set status of the processes: PH up, PH Down, and PH Monitoring, this file can be modified directly but serves as a file that allows for user controls
-### ./config/ph-control.service
+### ./system/ph-control.service
 - this file runs the ph-control script as a service file on linux OS
+- systemctl enable ~/ph-control/system/ph-control.service
+- systemctl start ph-control
+
 ### ./phdata.txt
 -  this file saves the Calibration parameters of the DFRobot PH sensor
+### ./logs/*
+- logs of the process as well as status operations
 
 ## Issues
 - MQTT communication for UI control
 - Calibration protocol
-- Service file
 - Turn this into a class structure for replicability/ abstraction (objectify)
 - add liscence
 
@@ -64,3 +67,4 @@
 - add temperature sensor for temperature compensation
 - json files for api
 - Logging over print statements (log files)
+- Service file
