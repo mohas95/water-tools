@@ -12,8 +12,9 @@ from DFRobot_PH import DFRobot_PH
 
 import threading
 from logzero import logger, setup_logger
-process_logger = setup_logger(name=__name__, logfile="./logs/process.log", level=10)
-status_logger = setup_logger(name=__name__, logfile="./logs/status.log", level=10)
+
+process_logger = setup_logger(name=__name__, logfile="./logs/process.log", level=30)
+status_logger = setup_logger(name=__name__, logfile="./logs/status.log", level=30)
 
 ############################################################ Define RPI Pins
 ph_up = 26 # Relay_Ch1 = 26
