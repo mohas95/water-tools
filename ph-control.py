@@ -4,6 +4,7 @@ sys.path.append('./DFRobot')
 import RPi.GPIO as GPIO
 import threading
 import time
+import datetime
 import json
 import os.path
 import glob
@@ -44,6 +45,8 @@ ph_down_status = None # variable used to pass on the status of each process dete
 ph_monitor_status = None # variable used to pass on the status of each process determined by the status.json file
 temp_monitor_status = None # variable used to pass on the status of each process determined by the status.json file
 status_json = "./status.json"
+PH_api = "./api/PH.json"
+temp_api = "./api/TEMPERATURE.json"
 
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
@@ -236,6 +239,7 @@ def get_temp():
 					temp_string = lines[1][equals_pos+2:]
 					temperature = float(temp_string) / 1000.0
 
+				update_api(api_file=temp_api, data = {"Temperature(Celsius)":temperature})
 				process_logger.info("[Temperature monitor]: Temperature:{}".format(temperature))
 				time.sleep(sample_frequency)
 
@@ -313,6 +317,7 @@ def get_PH():
 					temp = 25
 
 				PH = ph.readPH(ph_voltage['r'],temp)
+				update_api(api_file=PH_api, data = {"PH":PH})
 				process_logger.info('[PH monitor]: PH Voltage: {}, Temperature: {} ----> PH: {}'.format(ph_voltage['r'],temp,PH))
 				# process_logger.info("PH:{}".format(PH))
 				time.sleep(sample_frequency)
@@ -370,6 +375,17 @@ def update_status(process_status, status_file ='./status.json', status_value = F
 
 	with open(status_file, "w") as f:
 		f.write(json.dumps(status, indent=4))
+
+
+def update_api(api_file, data):
+
+	timestamp = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S %z')
+
+	data["last updated"] = timestamp
+
+	with open(api_file, "w") as f:
+		f.write(json.dumps(data, indent=4))
+
 
 ############################################################ Main Process
 if __name__ == '__main__':
