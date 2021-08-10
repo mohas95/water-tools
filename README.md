@@ -43,6 +43,7 @@
 - Raspberrypi 3B+
 - DFRobot PH sensor V2 PRO (within the DFROBOT_PH subdirectory)
 - DFRobot ADS1115 ADC unit (within the DFROBOT_PH subdirectory)
+- DS18B20 Temperature probe with breakout board
 
 ## Configuration and user control files
 ### ./status.json
