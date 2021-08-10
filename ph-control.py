@@ -37,6 +37,7 @@ ph_up_status = None # variable used to pass on the status of each process determ
 ph_down_status = None # variable used to pass on the status of each process determined by the status.json file
 ph_monitor_status = None # variable used to pass on the status of each process determined by the status.json file
 temp_monitor_status = None # variable used to pass on the status of each process determined by the status.json file
+status_json = "./status.json"
 
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
