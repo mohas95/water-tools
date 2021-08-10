@@ -15,9 +15,8 @@ import logging
 import logzero
 from logzero import logger, setup_logger
 
-formatter = logging.Formatter("%(asctime)s(name)s %(levelname)s% (funcName)s:  %(message)s")
-process_logger = setup_logger(name=__name__+"process_logger", logfile="./logs/process.log", level=10, formatter = formatter)
-status_logger = setup_logger(name=__name__+"status_logger", logfile="./logs/status.log", level=10, formatter = formatter)
+process_logger = setup_logger(name=__name__+"process_logger", logfile="./logs/process.log", level=10)
+status_logger = setup_logger(name=__name__+"status_logger", logfile="./logs/status.log", level=10)
 
 ############################################################ Define RPI Pins
 ph_up = 26 # Relay_Ch1 = 26
@@ -75,10 +74,10 @@ def PH_up():
 		try:
 			GPIO.setup(ph_up,GPIO.OUT)
 			GPIO.output(ph_up, GPIO.HIGH)
-			print('\n[PH+]: Initialized PH up doser')
+			process_logger.info('\n[PH+]: Initialized PH up doser')
 			success = 1
 		except:
-			print('\n[PH+]: ERROR Initializing PH up doser')
+			process_logger.warn('\n[PH+]: ERROR Initializing PH up doser')
 			update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
 			time.sleep(refresh_rate*2)
 			ph_up_status = False
@@ -86,16 +85,16 @@ def PH_up():
 	### Process
 	while ph_up_status:
 		if not PH:
-			print('[PH+]: Please Enable PH readings')
+			process_logger.warn('[PH+]: Please Enable PH readings')
 			time.sleep(5)
 		while PH and ph_up_status:
 			try:
 				if PH < low_ph_thresh:
-					print(f'[PH+]: {PH} lower than threashold, activating pump')
+					process_logger.info(f'[PH+]: {PH} lower than threashold, activating pump')
 					GPIO.output(ph_up, GPIO.LOW)
 					time.sleep(dose_on_time)
 					GPIO.output(ph_up, GPIO.HIGH)
-					print(f'[PH+]: pump deactivated, waiting {dose_delay_time} seconds')
+					process_logger.info(f'[PH+]: pump deactivated, waiting {dose_delay_time} seconds')
 					time.sleep(dose_delay_time)
 
 					count = 0
@@ -105,11 +104,11 @@ def PH_up():
 				GPIO.output(ph_up, GPIO.HIGH) #just incase turn off pump
 				count += 1
 				tries_left = retry_count-count
-				print(f'[PH+]: ERROR in PH Up control, will try {tries_left} more times')
+				process_logger.warn(f'[PH+]: ERROR in PH Up control, will try {tries_left} more times')
 				time.sleep(1)
 
 				if count+1 >= retry_count:
-					print("[PH+]: Exceeded the number of retries, closing process... attempting to restart process")
+					process_logger.warn("[PH+]: Exceeded the number of retries, closing process... attempting to restart process")
 					update_status(process_status = 'ph_up', status_file = status_json, status_value = False)
 					time.sleep(refresh_rate*2)
 					ph_up_status = False
@@ -140,10 +139,10 @@ def PH_down():
 		try:
 			GPIO.setup(ph_down,GPIO.OUT)
 			GPIO.output(ph_down, GPIO.HIGH)
-			print('\n[PH-]: Initialized PH down doser')
+			process_logger.info('\n[PH-]: Initialized PH down doser')
 			success = 1
 		except:
-			print('\n[PH-]: ERROR Initializing PH down doser')
+			process_logger.warn('\n[PH-]: ERROR Initializing PH down doser')
 			update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
 			time.sleep(refresh_rate*2)
 			ph_down_status = False
@@ -151,16 +150,16 @@ def PH_down():
 	### Process
 	while ph_down_status:
 		if not PH:
-			print('[PH-]: Please Enable PH readings')
+			process_logger.warn('[PH-]: Please Enable PH readings')
 			time.sleep(5)
 		while PH and ph_down_status:
 			try:
 				if PH > high_ph_thresh:
-					print(f'[PH-]: {PH} higher than the upper threashold, activating pump')
+					process_logger.info(f'[PH-]: {PH} higher than the upper threashold, activating pump')
 					GPIO.output(ph_down, GPIO.LOW)
 					time.sleep(dose_on_time)
 					GPIO.output(ph_down, GPIO.HIGH)
-					print(f'[PH-]: pump deactivated, waiting {dose_delay_time} seconds')
+					process_logger.info(f'[PH-]: pump deactivated, waiting {dose_delay_time} seconds')
 					time.sleep(dose_delay_time)
 
 					count = 0
@@ -170,11 +169,11 @@ def PH_down():
 				GPIO.output(ph_down, GPIO.HIGH)
 				count += 1
 				tries_left = retry_count-count
-				print(f'[PH-]: ERROR in PH down control, will try {tries_left} more times')
+				process_logger.warn(f'[PH-]: ERROR in PH down control, will try {tries_left} more times')
 				time.sleep(1)
 
 				if count+1 >= retry_count:
-					print("[PH-]: Exceeded the number of retries, closing process... attempting to restart process")
+					process_logger.warn("[PH-]: Exceeded the number of retries, closing process... attempting to restart process")
 					update_status(process_status = 'ph_down', status_file = status_json, status_value = False)
 					time.sleep(refresh_rate*2)
 					ph_down_status = False
@@ -210,11 +209,11 @@ def get_temp():
 				device_folder = glob.glob(base_dir + '28*')[0]
 				device_file = device_folder + '/w1_slave'
 
-				print("\n[Temperature monitor]: Temperature Sensor Set up Successful")
+				process_logger.info("\n[Temperature monitor]: Temperature Sensor Set up Successful")
 				success = 1
 
 			except:
-				print("[Temperature monitor]: Error Initializing Temperature Probe")
+				process_logger.warn("[Temperature monitor]: Error Initializing Temperature Probe")
 				update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
 				time.sleep(refresh_rate*2)
 				temp_monitor_status=False
@@ -236,7 +235,7 @@ def get_temp():
 					temp_string = lines[1][equals_pos+2:]
 					temperature = float(temp_string) / 1000.0
 
-				print("[Temperature monitor]: Temperature:{}".format(temperature))
+				process_logger.info("[Temperature monitor]: Temperature:{}".format(temperature))
 				time.sleep(sample_frequency)
 
 				count = 0
@@ -245,11 +244,11 @@ def get_temp():
 				temperature = None
 				count += 1
 				tries_left = retry_count-count
-				print(f'[Temperature monitor]: ERROR trying to Get Temperature data from the sensor, will try {tries_left} more times')
+				process_logger.warn(f'[Temperature monitor]: ERROR trying to Get Temperature data from the sensor, will try {tries_left} more times')
 				time.sleep(1)
 
 				if count+1 >= retry_count:
-					print("[TEMPERATURE monitor]: Exceeded the number of retries, closing process... Please restart process")
+					process_logger.error("[TEMPERATURE monitor]: Exceeded the number of retries, closing process... Please restart process")
 
 					update_status(process_status = 'temp_monitor', status_file = status_json, status_value = False)
 					time.sleep(refresh_rate*2)
@@ -290,11 +289,11 @@ def get_PH():
 				# ph.reset()
 				ph.begin()
 
-				print("\n[PH monitor]: PH Sensor Set up Successful")
+				process_logger.info("\n[PH monitor]: PH Sensor Set up Successful")
 				success = 1
 
 			except:
-				print("[PH monitor]: Error Initializing PH Probe, reseting please recalibrate")
+				process_logger.error("[PH monitor]: Error Initializing PH Probe, reseting please recalibrate")
 				ph.reset()
 				update_status(process_status = 'ph_monitor', status_file = status_json, status_value = False)
 				time.sleep(refresh_rate*2)
@@ -312,9 +311,9 @@ def get_PH():
 				else:
 					temp = 25
 
-				print('[PH monitor]: PH Voltage: {}, Temperature: {} ----> '.format(ph_voltage['r'],temp), end = '')
+				process_logger.info('[PH monitor]: PH Voltage: {}, Temperature: {} ----> '.format(ph_voltage['r'],temp), end = '')
 				PH = ph.readPH(ph_voltage['r'],temp)
-				print("PH:{}".format(PH))
+				process_logger.info("PH:{}".format(PH))
 				time.sleep(sample_frequency)
 
 				count = 0
@@ -323,11 +322,11 @@ def get_PH():
 				PH = None
 				count += 1
 				tries_left = retry_count-count
-				print(f'[PH monitor]: ERROR trying to Get PH data from the sensor, will try {tries_left} more times')
+				process_logger.warn(f'[PH monitor]: ERROR trying to Get PH data from the sensor, will try {tries_left} more times')
 				time.sleep(1)
 
 				if count+1 >= retry_count:
-					print("[PH monitor]: Exceeded the number of retries, closing process... Please restart process")
+					process_logger.error("[PH monitor]: Exceeded the number of retries, closing process... Please restart process")
 					update_status(process_status = 'ph_monitor', status_file = status_json, status_value = False)
 					time.sleep(refresh_rate*2)
 					ph_monitor_status = False
@@ -350,16 +349,16 @@ def load_status(file, last_status=None):
 				status = last_status
 				with open(status_json, "w") as f:
 					f.write(json.dumps(status, indent=4) )
-				print(f'Error in config file detected new file created and formated with last known status: {file}')
+				status_logger.warn(f'Error in config file detected new file created and formated with last known status: {file}')
 			else:
-				print('File currupt:Could not get the last known status')
+				status_logger.error('File currupt:Could not get the last known status')
 				exit()
 
 	else:
 		status = {"ph_up":False, "ph_down":False, "ph_monitor":False, "temp_monitor" : False}
 		with open(file, "w") as f:
 			f.write(json.dumps(status, indent=4) )
-		print(f'{status_json} does not exit, new file created and formated')
+		status_logger.warn(f'{status_json} does not exit, new file created and formated')
 
 	return status
 
@@ -379,9 +378,9 @@ if __name__ == '__main__':
 		GPIO.setwarnings(False)
 		GPIO.setmode(GPIO.BCM)
 
-		print("\nGPIO flags set")
+		status_logger.debug("\nGPIO flags set")
 	except:
-		print('\nCould not initialize gpio pins')
+		status_logger.error('\nCould not initialize gpio pins')
 		exit()
 
 ###### Import config file & start processes, Initial setup
@@ -404,7 +403,7 @@ if __name__ == '__main__':
 		ph_down_control.start()
 
 	except:
-		print('\nCould not open or create json file of the processes')
+		status_logger.error('\nCould not open or create json file of the processes')
 		exit()
 
 ##### Main Code
