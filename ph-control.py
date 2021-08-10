@@ -289,7 +289,7 @@ def get_PH():
 				# ph.reset()
 				ph.begin()
 
-				process_logger.info("\n[PH monitor]: PH Sensor Set up Successful")
+				process_logger.info("[PH monitor]: PH Sensor Set up Successful")
 				success = 1
 
 			except:
@@ -311,9 +311,9 @@ def get_PH():
 				else:
 					temp = 25
 
-				process_logger.info('[PH monitor]: PH Voltage: {}, Temperature: {} ----> '.format(ph_voltage['r'],temp), end = '')
 				PH = ph.readPH(ph_voltage['r'],temp)
-				process_logger.info("PH:{}".format(PH))
+				process_logger.info('[PH monitor]: PH Voltage: {}, Temperature: {} ----> PH: {}'.format(ph_voltage['r'],temp,PH))
+				# process_logger.info("PH:{}".format(PH))
 				time.sleep(sample_frequency)
 
 				count = 0
