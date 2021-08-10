@@ -13,8 +13,6 @@ from DFRobot_PH import DFRobot_PH
 import threading
 from logzero import logger, setup_logger
 
-process_logger = setup_logger(name=__name__, logfile="./logs/process.log", level=10)
-status_logger = setup_logger(name=__name__, logfile="./logs/status.log", level=10)
 ############################################################ Define RPI Pins
 ph_up = 26 # Relay_Ch1 = 26
 ph_down = 20 # Relay_Ch2 = 20
@@ -368,7 +366,8 @@ def update_status(process_status, status_file ='./status.json', status_value = F
 
 ############################################################ Main Process
 if __name__ == '__main__':
-
+	process_logger = setup_logger(name=__name__, logfile="./logs/process.log", level=10)
+	status_logger = setup_logger(name=__name__, logfile="./logs/status.log", level=10)
 ###### GPIO Setup
 	try:
 		GPIO.setwarnings(False)
