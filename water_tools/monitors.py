@@ -210,7 +210,7 @@ class PHMonitor:
 		return ph_reader, voltage_reader
 
 
-	def get_PH(self, temp=25):
+	def get_ph(self, temp=25):
 
 		voltage = self.voltage_reader.readVoltage(self.ADC_pin)
 		if self.temperature_api_file:
