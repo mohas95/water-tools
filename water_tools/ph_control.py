@@ -8,8 +8,8 @@ import logzero
 
 ######## Default Configuration
 default_config = {
-        "1":{'name':'PH_up', 'pin':26, 'state':False},
-        "2":{'name':'PH_down', 'pin':20, 'state':False}
+		"1":{'name':'PH_up', 'pin':26, 'state':False},
+		"2":{'name':'PH_down', 'pin':20, 'state':False}
 }
 ########################################################### Global Variables
 format = '%(color)s[%(levelname)1.1s %(asctime)s %(name)s :%(funcName)s %(thread)d]%(end_color)s %(message)s' # format for the logzero logger
@@ -18,12 +18,12 @@ debug_mode = False #debug mode for developers
 
 ########################################################### Wrapper/decorator definition function
 def threaded(func):
-    """start and return a thread of the passed in function. Threadify a function with the @threaded decorator"""
-    def wrapper(*args, **kwargs):
-        thread = threading.Thread(target=func, args=args, kwargs=kwargs, daemon=False)
-        thread.start()
-        return thread
-    return wrapper
+	"""start and return a thread of the passed in function. Threadify a function with the @threaded decorator"""
+	def wrapper(*args, **kwargs):
+		thread = threading.Thread(target=func, args=args, kwargs=kwargs, daemon=False)
+		thread.start()
+		return thread
+	return wrapper
 
 def push_to_api(api_file, data):
 
@@ -47,24 +47,24 @@ def push_to_api(api_file, data):
 #         self.down_pin = 20
 
 class TempMonitor():
-    def __init__(self, api_dir= './api/', log_dir='./log/', refresh_rate=1):
+	def __init__(self, api_dir= './api/', log_dir='./log/', refresh_rate=1):
 
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-        if not os.path.exists(api_dir):
-            os.makedirs(api_dir)
+		if not os.path.exists(log_dir):
+			os.makedirs(log_dir)
+		if not os.path.exists(api_dir):
+			os.makedirs(api_dir)
 
-        log_file = log_dir + 'temperature_process.log'
+		log_file = log_dir + 'temperature_process.log'
 
-        self.state = False
-        self.temperature = None
-        self.refresh_rate= refresh_rate
-        self.api_file = api_dir + 'TEMPERATURE.json'
-        self.logger = setup_logger(name= __name__+ "_temp_logger", logfile=log_file, level=10 if debug_mode else 20, formatter = formatter, maxBytes=2e6, backupCount=3)
-        self.one_wire_device_folder = self.begin()
-        self.thread = None
+		self.state = False
+		self.temperature = None
+		self.refresh_rate= refresh_rate
+		self.api_file = api_dir + 'TEMPERATURE.json'
+		self.logger = setup_logger(name= __name__+ "_temp_logger", logfile=log_file, level=10 if debug_mode else 20, formatter = formatter, maxBytes=2e6, backupCount=3)
+		self.one_wire_device_folder = self.begin()
+		self.thread = None
 
-    def begin(self):
+	def begin(self):
 		try:
 			# Settings for the RTD temperature probe
 			os.system('modprobe w1-gpio')
@@ -75,54 +75,54 @@ class TempMonitor():
 
 			self.logger.info("\n[Temperature monitor]: Temperature Sensor Set up Successful")
 
-            return device_folder
+			return device_folder
 
 		except:
 			self.logger.warning("[Temperature monitor]: Error Initializing Temperature Probe")
 
-    def get_temp(self, device_folder):
-        try:
-    		with open(device_file, "r") as f:
-    			lines = f.readlines()
+	def get_temp(self, device_folder):
+		try:
+			with open(device_file, "r") as f:
+				lines = f.readlines()
 
-    		while lines[0].strip()[-3:] != 'YES':
-    			time.sleep(0.2)
+			while lines[0].strip()[-3:] != 'YES':
+				time.sleep(0.2)
 
-    			with open(device_file, "r") as f:
-    				lines = f.readlines()
+				with open(device_file, "r") as f:
+					lines = f.readlines()
 
-    		equals_pos = lines[1].find('t=')
-    		if equals_pos != -1:
-    			temp_string = lines[1][equals_pos+2:]
-    			temperature = float(temp_string) / 1000.0
+			equals_pos = lines[1].find('t=')
+			if equals_pos != -1:
+				temp_string = lines[1][equals_pos+2:]
+				temperature = float(temp_string) / 1000.0
 
-            return temperature
-        except:
+			return temperature
+		except:
 			self.logger.warning("[Temperature monitor]: Error Failed to get temperature data")
 
-    @threaded
-    def start(self):
-        success=0
-        self.state = True
+	@threaded
+	def start(self):
+		success=0
+		self.state = True
 
-        while self.state and not sucess:
-            self.one_wire_device_folder = self.begin()
-            sucess =True
+		while self.state and not sucess:
+			self.one_wire_device_folder = self.begin()
+			sucess =True
 
-        while self.state:
-            self.temperature = self.get_temp(self.one_wire_device_folder)
-            data = {"temperature(Celsius)":self.temperature}
-            push_to_api(self.api_file, data)
-            time.sleep(self.refresh_rate)
+		while self.state:
+			self.temperature = self.get_temp(self.one_wire_device_folder)
+			data = {"temperature(Celsius)":self.temperature}
+			push_to_api(self.api_file, data)
+			time.sleep(self.refresh_rate)
 
-        self.temperature = None
-        data = {"temperature(Celsius)":self.temperature}
-        push_to_api(self.api_file, data)
+		self.temperature = None
+		data = {"temperature(Celsius)":self.temperature}
+		push_to_api(self.api_file, data)
 		self.logger.info("\n[Temperature monitor]: Stopped")
 
 
-    def stop(self):
-        self.state=False
+	def stop(self):
+		self.state=False
 
 #
 # class PHMonitor():
