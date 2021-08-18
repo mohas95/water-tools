@@ -131,6 +131,7 @@ class TempMonitor():
 
 
 if __name__ == '__main__':
+	pass
 
 # gpio_engine = GPIO_engine.BulkUpdater(
 #                                         config_file = './ph_config.json',
