@@ -58,9 +58,7 @@ class TempMonitor():
 			os.makedirs(log_dir)
 		if not os.path.exists(api_dir):
 			os.makedirs(api_dir)
-
 		log_file = log_dir + 'temperature_process.log'
-
 		self.state = False
 		self.temperature = None
 		self.refresh_rate= refresh_rate
@@ -146,11 +144,8 @@ class TempMonitor():
 			base_dir = '/sys/bus/w1/devices/'
 			device_folder = glob.glob(base_dir + '28*')[0]
 			device_file = device_folder + '/w1_slave'
-
 			self.logger.info("\n[Temperature monitor]: Temperature Sensor Set up Successful")
-
 			return device_file
-
 		except:
 			self.logger.warning("[Temperature monitor]: Error Initializing Temperature Probe")
 
@@ -158,18 +153,14 @@ class TempMonitor():
 		try:
 			with open(device_file, "r") as f:
 				lines = f.readlines()
-
 			while lines[0].strip()[-3:] != 'YES':
 				time.sleep(0.2)
-
 				with open(device_file, "r") as f:
 					lines = f.readlines()
-
 			equals_pos = lines[1].find('t=')
 			if equals_pos != -1:
 				temp_string = lines[1][equals_pos+2:]
 				temperature = float(temp_string) / 1000.0
-
 			return temperature
 		except:
 			self.logger.warning("[Temperature monitor]: Error Failed to get temperature data")
@@ -178,18 +169,15 @@ class TempMonitor():
 	def start(self):
 		success=None
 		self.state = True
-
 		while self.state and not success:
 			self.one_wire_device_file = self.begin()
 			success =True
-
 		while self.state:
 			self.temperature = self.get_temp(self.one_wire_device_file)
 			data = {"temperature":self.temperature,"unit":"Celsius"}
 			push_to_api(self.api_file, data)
 			self.logger.info(f'[Temperatur(Celsuis)]: {self.temperature}')
 			time.sleep(self.refresh_rate)
-
 		self.temperature = None
 		data = {"temperature":self.temperature,"unit":"Celsius"}
 		push_to_api(self.api_file, data)
