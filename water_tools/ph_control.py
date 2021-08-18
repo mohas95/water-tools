@@ -47,14 +47,14 @@ def push_to_api(api_file, data):
 #         self.down_pin = 20
 
 class TempMonitor():
-    def __init__(self, api_dir= './api/', log_dir=None, refresh_rate=1):
+    def __init__(self, api_dir= './api/', log_dir='./log/', refresh_rate=1):
 
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
         if not os.path.exists(api_dir):
             os.makedirs(api_dir)
 
-        log_file = log_dir + 'temp_process.log'
+        log_file = log_dir + 'temperature_process.log'
 
         self.state = False
         self.temperature = None
@@ -118,6 +118,8 @@ class TempMonitor():
         self.temperature = None
         data = {"temperature(Celsius)":self.temperature}
         push_to_api(self.api_file, data)
+		self.logger.info("\n[Temperature monitor]: Stopped")
+
 
     def stop(self):
         self.state=False
