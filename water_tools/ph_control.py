@@ -66,8 +66,79 @@ class TempMonitor():
 		self.refresh_rate= refresh_rate
 		self.api_file = api_dir + 'TEMPERATURE.json'
 		self.logger = setup_logger(name= __name__+ "_temp_logger", logfile=log_file, level=10 if debug_mode else 20, formatter = formatter, maxBytes=2e6, backupCount=3)
-		self.one_wire_device_folder = self.begin()
+		self.one_wire_device_file = None
 		self.thread = None
+
+	@properties
+	def state(self):
+	"""Return the state of the TempMonitor"""
+		return self._state
+	@state.setter
+	def state(self,value):
+	"""Set the state of the TempMonitor"""
+		if not isinstance(value, bool):
+			raise TypeError("State must be a bool")
+		self._state = value
+
+	@properties
+	def temperature(self):
+	"""Return the temperature of the TempMonitor"""
+		return self._temperature
+	@temperature.setter
+	def temperature(self,value):
+	"""Set the temperature of the TempMonitor"""
+		self._temperature = value
+
+	@properties
+	def refresh_rate(self):
+	"""Return the refresh_rate of the TempMonitor"""
+		return self._refresh_rate
+	@refresh_rate.setter
+	def refresh_rate(self,value):
+	"""Set the refresh_rate of the TempMonitor"""
+		if not isinstance(value, int):
+			raise TypeError("refresh_rate must be a integer")
+		self._refresh_rate = value
+
+	@properties
+	def api_file(self):
+	"""Return the api_file of the TempMonitor"""
+		return self._api_file
+	@api_file.setter
+	def api_file(self,value):
+	"""Set the api_file of the TempMonitor"""
+		if not isinstance(value, str):
+			raise TypeError("api_file must be a string")
+		self._api_file= value
+
+	@properties
+	def logger(self):
+	"""Return the logger of the TempMonitor"""
+		return self._logger
+	@logger.setter
+	def logger(self,value):
+	"""Set the logger of the TempMonitor"""
+		self._logger= value
+
+	@properties
+	def thread(self):
+	"""Return the thread of the TempMonitor"""
+		return self._thread
+	@thread.setter
+	def thread(self,value):
+	"""Set the thread of the TempMonitor"""
+		self._thread= value
+
+	@properties
+	def one_wire_device_file(self):
+	"""Return the one_wire_device_file of the TempMonitor"""
+		return self._one_wire_device_file
+	@one_wire_device_file.setter
+	def one_wire_device_file(self,value):
+	"""Set the one_wire_device_file of the TempMonitor"""
+		if not isinstance(value, str):
+			raise TypeError("one_wire_device_file must be a string")
+		self._one_wire_device_file = value
 
 	def begin(self):
 		try:
@@ -111,11 +182,11 @@ class TempMonitor():
 		self.state = True
 
 		while self.state and not success:
-			self.one_wire_device_folder = self.begin()
+			self.one_wire_device_file = self.begin()
 			success =True
 
 		while self.state:
-			self.temperature = self.get_temp(self.one_wire_device_folder)
+			self.temperature = self.get_temp(self.one_wire_device_file)
 			data = {"temperature":self.temperature,"unit":"Celsius"}
 			push_to_api(self.api_file, data)
 			self.logger.info(f'[Temperatur(Celsuis)]: {self.temperature}')
