@@ -118,7 +118,7 @@ class TempMonitor():
 			self.temperature = self.get_temp(self.one_wire_device_folder)
 			data = {"temperature(Celsius)":self.temperature}
 			push_to_api(self.api_file, data)
-			self.logger.info(f"[Temperatur(Celsuis)]:{self.temperature}")
+			self.logger.info(f"[Temperatur(Celsuis)]: {self.temperature}")
 			time.sleep(self.refresh_rate)
 
 		self.temperature = None
