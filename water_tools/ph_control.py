@@ -69,7 +69,7 @@ class TempMonitor():
 		self.one_wire_device_file = None
 		self.thread = None
 
-	@properties
+	@property
 	def state(self):
 		"""Return the state of the TempMonitor"""
 		return self._state
@@ -80,7 +80,7 @@ class TempMonitor():
 			raise TypeError("State must be a bool")
 		self._state = value
 
-	@properties
+	@property
 	def temperature(self):
 		"""Return the temperature of the TempMonitor"""
 		return self._temperature
@@ -89,7 +89,7 @@ class TempMonitor():
 		"""Set the temperature of the TempMonitor"""
 		self._temperature = value
 
-	@properties
+	@property
 	def refresh_rate(self):
 		"""Return the refresh_rate of the TempMonitor"""
 		return self._refresh_rate
@@ -100,7 +100,7 @@ class TempMonitor():
 			raise TypeError("refresh_rate must be a integer")
 		self._refresh_rate = value
 
-	@properties
+	@property
 	def api_file(self):
 		"""Return the api_file of the TempMonitor"""
 		return self._api_file
@@ -111,7 +111,7 @@ class TempMonitor():
 			raise TypeError("api_file must be a string")
 		self._api_file= value
 
-	@properties
+	@property
 	def logger(self):
 		"""Return the logger of the TempMonitor"""
 		return self._logger
@@ -120,7 +120,7 @@ class TempMonitor():
 		"""Set the logger of the TempMonitor"""
 		self._logger= value
 
-	@properties
+	@property
 	def thread(self):
 		"""Return the thread of the TempMonitor"""
 		return self._thread
@@ -129,7 +129,7 @@ class TempMonitor():
 		"""Set the thread of the TempMonitor"""
 		self._thread= value
 
-	@properties
+	@property
 	def one_wire_device_file(self):
 		"""Return the one_wire_device_file of the TempMonitor"""
 		return self._one_wire_device_file
