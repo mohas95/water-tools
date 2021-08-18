@@ -71,71 +71,71 @@ class TempMonitor():
 
 	@properties
 	def state(self):
-	"""Return the state of the TempMonitor"""
+		"""Return the state of the TempMonitor"""
 		return self._state
 	@state.setter
 	def state(self,value):
-	"""Set the state of the TempMonitor"""
+		"""Set the state of the TempMonitor"""
 		if not isinstance(value, bool):
 			raise TypeError("State must be a bool")
 		self._state = value
 
 	@properties
 	def temperature(self):
-	"""Return the temperature of the TempMonitor"""
+		"""Return the temperature of the TempMonitor"""
 		return self._temperature
 	@temperature.setter
 	def temperature(self,value):
-	"""Set the temperature of the TempMonitor"""
+		"""Set the temperature of the TempMonitor"""
 		self._temperature = value
 
 	@properties
 	def refresh_rate(self):
-	"""Return the refresh_rate of the TempMonitor"""
+		"""Return the refresh_rate of the TempMonitor"""
 		return self._refresh_rate
 	@refresh_rate.setter
 	def refresh_rate(self,value):
-	"""Set the refresh_rate of the TempMonitor"""
+		"""Set the refresh_rate of the TempMonitor"""
 		if not isinstance(value, int):
 			raise TypeError("refresh_rate must be a integer")
 		self._refresh_rate = value
 
 	@properties
 	def api_file(self):
-	"""Return the api_file of the TempMonitor"""
+		"""Return the api_file of the TempMonitor"""
 		return self._api_file
 	@api_file.setter
 	def api_file(self,value):
-	"""Set the api_file of the TempMonitor"""
+		"""Set the api_file of the TempMonitor"""
 		if not isinstance(value, str):
 			raise TypeError("api_file must be a string")
 		self._api_file= value
 
 	@properties
 	def logger(self):
-	"""Return the logger of the TempMonitor"""
+		"""Return the logger of the TempMonitor"""
 		return self._logger
 	@logger.setter
 	def logger(self,value):
-	"""Set the logger of the TempMonitor"""
+		"""Set the logger of the TempMonitor"""
 		self._logger= value
 
 	@properties
 	def thread(self):
-	"""Return the thread of the TempMonitor"""
+		"""Return the thread of the TempMonitor"""
 		return self._thread
 	@thread.setter
 	def thread(self,value):
-	"""Set the thread of the TempMonitor"""
+		"""Set the thread of the TempMonitor"""
 		self._thread= value
 
 	@properties
 	def one_wire_device_file(self):
-	"""Return the one_wire_device_file of the TempMonitor"""
+		"""Return the one_wire_device_file of the TempMonitor"""
 		return self._one_wire_device_file
 	@one_wire_device_file.setter
 	def one_wire_device_file(self,value):
-	"""Set the one_wire_device_file of the TempMonitor"""
+		"""Set the one_wire_device_file of the TempMonitor"""
 		if not isinstance(value, str):
 			raise TypeError("one_wire_device_file must be a string")
 		self._one_wire_device_file = value
