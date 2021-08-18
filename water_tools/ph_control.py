@@ -85,7 +85,7 @@ class TempMonitor():
 		except:
 			self.logger.warning("[Temperature monitor]: Error Initializing Temperature Probe")
 
-	def get_temp(self, device_folder):
+	def get_temp(self, device_file):
 		try:
 			with open(device_file, "r") as f:
 				lines = f.readlines()
