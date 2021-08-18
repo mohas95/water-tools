@@ -127,7 +127,7 @@ class TempMonitor():
 			device_folder = glob.glob(base_dir + '28*')[0]
 			device_file = device_folder + '/w1_slave'
 			self.logger.info("\n[Temperature monitor]: Temperature Sensor Set up Successful")
-            self.one_wire_device_file = device_file
+			self.one_wire_device_file = device_file
 
 			return device_file
 		except:
@@ -184,26 +184,26 @@ class PHMonitor:
 		self.refresh_rate= refresh_rate
 		self.api_file = api_dir + 'PH.json'
 		self.logger = setup_logger(name= __name__+ "_ph_logger", logfile=log_file, level=10 if debug_mode else 20, formatter = formatter, maxBytes=2e6, backupCount=3)
-        self.ADC_pin = ADC_pin
-        self.I2C_ADR = I2C_ADR
-        self.gain = gain
-        self.ph_reader = None
-        self.ADC_reader =None
+		self.ADC_pin = ADC_pin
+		self.I2C_ADR = I2C_ADR
+		self.gain = gain
+		self.ph_reader = None
+		self.ADC_reader =None
 		self.thread = None
 
-    def begin(self):
+	def begin(self):
 		voltage_reader = DFR_ADS1115.ADS1115() #instantiate as1115 ADC I2X Unit
 		ph_reader = DFR_PH.DFRobot_PH() # instantiate PH Probe
 		voltage_reader.setAddr_ADS1115(self.I2C_ADR) # set the I2C Address to 0x48
 		voltage_reader.setGain(self.gain)
 			# ph.reset()
 		ph_reader.begin()
-        self.ph_reader, self.ADC_reader = ph_reader, ADC_reader
+		self.ph_reader, self.ADC_reader = ph_reader, ADC_reader
 		self.logger.info("[PH monitor]: PH Sensor Set up Successful")
-        return ph_reader, ADC_reader
+		return ph_reader, ADC_reader
 
 
-    def
+	def
 
 
 
