@@ -104,10 +104,10 @@ class TempMonitor():
 
 	@threaded
 	def start(self):
-		success=0
+		success=None
 		self.state = True
 
-		while self.state and not sucess:
+		while self.state and not success:
 			self.one_wire_device_folder = self.begin()
 			sucess =True
 
