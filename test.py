@@ -1,4 +1,4 @@
-from water_tools import ph_control
+from water_tools import monitors
 import time
 
 
@@ -6,12 +6,12 @@ import time
 if __name__ == '__main__':
 
 
-    temp_control = ph_control.TempMonitor()
+    temp_monitor = monitors.TempMonitor()
 
-    temp_control.start()
+    temp_monitor.start()
 
     try:
         while True:
             time.sleep(1)
     except:
-        temp_control.stop()
+        temp_monitor.stop()
