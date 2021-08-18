@@ -86,24 +86,24 @@ class TempMonitor():
 			self.logger.warning("[Temperature monitor]: Error Initializing Temperature Probe")
 
 	def get_temp(self, device_file):
-		try:
+		# try:
+		with open(device_file, "r") as f:
+			lines = f.readlines()
+
+		while lines[0].strip()[-3:] != 'YES':
+			time.sleep(0.2)
+
 			with open(device_file, "r") as f:
 				lines = f.readlines()
 
-			while lines[0].strip()[-3:] != 'YES':
-				time.sleep(0.2)
+		equals_pos = lines[1].find('t=')
+		if equals_pos != -1:
+			temp_string = lines[1][equals_pos+2:]
+			temperature = float(temp_string) / 1000.0
 
-				with open(device_file, "r") as f:
-					lines = f.readlines()
-
-			equals_pos = lines[1].find('t=')
-			if equals_pos != -1:
-				temp_string = lines[1][equals_pos+2:]
-				temperature = float(temp_string) / 1000.0
-
-			return temperature
-		except:
-			self.logger.warning("[Temperature monitor]: Error Failed to get temperature data")
+		return temperature
+		# except:
+		# 	self.logger.warning("[Temperature monitor]: Error Failed to get temperature data")
 
 	@threaded
 	def start(self):
