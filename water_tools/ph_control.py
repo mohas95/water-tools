@@ -5,6 +5,7 @@ import os.path
 import glob
 import logging
 import logzero
+from logzer import setup_logger
 
 ######## Default Configuration
 default_config = {
