@@ -109,7 +109,7 @@ class TempMonitor():
 
 		while self.state and not success:
 			self.one_wire_device_folder = self.begin()
-			sucess =True
+			success =True
 
 		while self.state:
 			self.temperature = self.get_temp(self.one_wire_device_folder)
