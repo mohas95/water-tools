@@ -80,7 +80,7 @@ class TempMonitor():
 
 			self.logger.info("\n[Temperature monitor]: Temperature Sensor Set up Successful")
 
-			return device_folder
+			return device_file
 
 		except:
 			self.logger.warning("[Temperature monitor]: Error Initializing Temperature Probe")
