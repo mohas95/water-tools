@@ -23,7 +23,6 @@ def threaded(func):
 		return thread
 	return wrapper
 
-
 def push_to_api(api_file, data):
 
 	timestamp = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
@@ -33,6 +32,7 @@ def push_to_api(api_file, data):
 	with open(api_file, "w") as f:
 		f.write(json.dumps(data, indent=4))
 
+########################################################### Classes
 class TempMonitor():
 	def __init__(self, api_dir= './api/', log_dir='./log/', refresh_rate=1):
 
@@ -127,6 +127,8 @@ class TempMonitor():
 			device_folder = glob.glob(base_dir + '28*')[0]
 			device_file = device_folder + '/w1_slave'
 			self.logger.info("\n[Temperature monitor]: Temperature Sensor Set up Successful")
+            self.one_wire_device_file = device_file
+
 			return device_file
 		except:
 			self.logger.warning("[Temperature monitor]: Error Initializing Temperature Probe")
@@ -152,7 +154,7 @@ class TempMonitor():
 		success=None
 		self.state = True
 		while self.state and not success:
-			self.one_wire_device_file = self.begin()
+			self.begin()
 			success =True
 		while self.state:
 			self.temperature = self.get_temp(self.one_wire_device_file)
@@ -167,6 +169,45 @@ class TempMonitor():
 
 	def stop(self):
 		self.state=False
+
+class PHMonitor:
+	def __init__(self, api_dir='./api/', log_dir='./log/', refresh_rate=1, ADC_pin=0, I2C_ADR = DFR_ADS1115.ADS1115_IIC_ADDRESS0, gain =DFR_ADS1115.ADS1115_REG_CONFIG_PGA_6_144V):
+
+		if not os.path.exists(log_dir):
+			os.makedirs(log_dir)
+		if not os.path.exists(api_dir):
+			os.makedirs(api_dir)
+		log_file = log_dir + 'PH_process.log'
+
+		self.state = False
+		self.ph = None
+		self.refresh_rate= refresh_rate
+		self.api_file = api_dir + 'PH.json'
+		self.logger = setup_logger(name= __name__+ "_ph_logger", logfile=log_file, level=10 if debug_mode else 20, formatter = formatter, maxBytes=2e6, backupCount=3)
+        self.ADC_pin = ADC_pin
+        self.I2C_ADR = I2C_ADR
+        self.gain = gain
+        self.ph_reader = None
+        self.ADC_reader =None
+		self.thread = None
+
+    def begin(self):
+		voltage_reader = DFR_ADS1115.ADS1115() #instantiate as1115 ADC I2X Unit
+		ph_reader = DFR_PH.DFRobot_PH() # instantiate PH Probe
+		voltage_reader.setAddr_ADS1115(self.I2C_ADR) # set the I2C Address to 0x48
+		voltage_reader.setGain(self.gain)
+			# ph.reset()
+		ph_reader.begin()
+        self.ph_reader, self.ADC_reader = ph_reader, ADC_reader
+		self.logger.info("[PH monitor]: PH Sensor Set up Successful")
+        return ph_reader, ADC_reader
+
+
+    def
+
+
+
+
 
 
 if __name__ == '__main__':
