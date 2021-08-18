@@ -126,14 +126,15 @@ class TempMonitor():
 			base_dir = '/sys/bus/w1/devices/'
 			device_folder = glob.glob(base_dir + '28*')[0]
 			device_file = device_folder + '/w1_slave'
-			self.logger.info("\n[Temperature monitor]: Temperature Sensor Set up Successful")
+			self.logger.info("[Temperature monitor]: Temperature Sensor Set up Successful")
 			self.one_wire_device_file = device_file
 
 			return device_file
 		except:
 			self.logger.warning("[Temperature monitor]: Error Initializing Temperature Probe")
 
-	def get_temp(self, device_file):
+	def get_temp(self):
+		device_file = self.one_wire_device_file
 		try:
 			with open(device_file, "r") as f:
 				lines = f.readlines()
@@ -145,19 +146,21 @@ class TempMonitor():
 			if equals_pos != -1:
 				temp_string = lines[1][equals_pos+2:]
 				temperature = float(temp_string) / 1000.0
+
+			self.temperature = temperature
+
 			return temperature
 		except:
 			self.logger.warning("[Temperature monitor]: Error Failed to get temperature data")
 
 	@threaded
 	def start(self):
-		success=None
+
 		self.state = True
-		while self.state and not success:
-			self.begin()
-			success =True
+		self.begin()
+
 		while self.state:
-			self.temperature = self.get_temp(self.one_wire_device_file)
+			self.get_temp()
 			data = {"temperature":self.temperature,"unit":"Celsius"}
 			push_to_api(self.api_file, data)
 			self.logger.info(f'[Temperatur(Celsuis)]: {self.temperature}')
@@ -198,12 +201,50 @@ class PHMonitor:
 		voltage_reader.setGain(self.gain)
 			# ph.reset()
 		ph_reader.begin()
-		self.ph_reader, self.ADC_reader = ph_reader, ADC_reader
+		self.ph_reader, self.voltage_reader = ph_reader, voltage_reader
 		self.logger.info("[PH monitor]: PH Sensor Set up Successful")
-		return ph_reader, ADC_reader
+
+		return ph_reader, voltage_reader
 
 
-	# def
+	def get_PH(self, temp_api_file = None, temp=25):
+
+		voltage = self.voltage_reader.readVoltage(self.ADC_pin)
+		if temp_api_file:
+			with open(temp_api_file,'r') as f:
+				data = json.load(f)
+			temperature = data['temperature']
+			if not temperature:
+				temperature = temp
+		else:
+			temperature = temp
+
+		ph = self.ph_reader.readPH(voltage['r'],temperature)
+
+		self.voltage = ['r']
+		self.temperature = temperature
+		self.ph = ph
+
+		return ph, voltage['r'], temperature
+
+	@threaded
+	def start(self):
+		self.state = True
+		self.begin()
+
+		while self.state:
+			self.get_ph()
+			data = {"ph":self.ph,"unit":"ph"}
+			push_to_api(self.api_file, data)
+			self.logger.info('[PH monitor]: PH Voltage: {}, Temperature: {} ----> PH: {}'.format(self.voltage,self.temperature,self.ph))
+			time.sleep(self.refresh_rate)
+		self.ph = None
+		data = {"ph":self.ph,"unit":"ph"}
+		push_to_api(self.api_file, data)
+		self.logger.info("\n[PH monitor]: Stopped")
+
+	def stop(self):
+		self.state=False
 
 
 
