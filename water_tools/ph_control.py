@@ -122,7 +122,7 @@ class TempMonitor():
 			time.sleep(self.refresh_rate)
 
 		self.temperature = None
-		data = {"temperature(Celsius)":self.temperature}
+		data = {"temperature":self.temperature,"unit":"Celsius"}
 		push_to_api(self.api_file, data)
 		self.logger.info("\n[Temperature monitor]: Stopped")
 
