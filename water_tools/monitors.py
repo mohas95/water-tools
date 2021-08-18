@@ -174,7 +174,7 @@ class TempMonitor():
 		self.state=False
 
 class PHMonitor:
-	def __init__(self, api_dir='./api/', log_dir='./log/', refresh_rate=1, ADC_pin=0, I2C_ADR = DFR_ADS1115.ADS1115_IIC_ADDRESS0, gain =DFR_ADS1115.ADS1115_REG_CONFIG_PGA_6_144V):
+	def __init__(self, api_dir='./api/', log_dir='./log/', temperature_api_file = None, refresh_rate=1, ADC_pin=0, I2C_ADR = DFR_ADS1115.ADS1115_IIC_ADDRESS0, gain =DFR_ADS1115.ADS1115_REG_CONFIG_PGA_6_144V):
 
 		if not os.path.exists(log_dir):
 			os.makedirs(log_dir)
@@ -184,6 +184,9 @@ class PHMonitor:
 
 		self.state = False
 		self.ph = None
+		self.voltage = None
+		self.temperature_api_file = temperature_api_file
+		self.temperature = None
 		self.refresh_rate= refresh_rate
 		self.api_file = api_dir + 'PH.json'
 		self.logger = setup_logger(name= __name__+ "_ph_logger", logfile=log_file, level=10 if debug_mode else 20, formatter = formatter, maxBytes=2e6, backupCount=3)
@@ -207,11 +210,11 @@ class PHMonitor:
 		return ph_reader, voltage_reader
 
 
-	def get_PH(self, temp_api_file = None, temp=25):
+	def get_PH(self, temp=25):
 
 		voltage = self.voltage_reader.readVoltage(self.ADC_pin)
-		if temp_api_file:
-			with open(temp_api_file,'r') as f:
+		if self.temperature_api_file:
+			with open(self.temperature_api_file,'r') as f:
 				data = json.load(f)
 			temperature = data['temperature']
 			if not temperature:
@@ -221,7 +224,7 @@ class PHMonitor:
 
 		ph = self.ph_reader.readPH(voltage['r'],temperature)
 
-		self.voltage = ['r']
+		self.voltage = voltage['r']
 		self.temperature = temperature
 		self.ph = ph
 
@@ -245,10 +248,6 @@ class PHMonitor:
 
 	def stop(self):
 		self.state=False
-
-
-
-
 
 
 if __name__ == '__main__':
