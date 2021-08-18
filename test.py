@@ -4,8 +4,6 @@ import time
 
 
 if __name__ == '__main__':
-
-
     temp_monitor = monitors.TempMonitor()
     ph_monitor = monitors.PHMonitor(temperature_api_file = './api/TEMPERATURE.json')
 

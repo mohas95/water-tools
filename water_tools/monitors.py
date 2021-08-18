@@ -24,11 +24,9 @@ def threaded(func):
 	return wrapper
 
 def push_to_api(api_file, data):
-
+	"""Push data in json format to an api file"""
 	timestamp = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
-
 	data["last updated"] = timestamp
-
 	with open(api_file, "w") as f:
 		f.write(json.dumps(data, indent=4))
 
@@ -128,7 +126,6 @@ class TempMonitor():
 			device_file = device_folder + '/w1_slave'
 			self.logger.info("[Temperature monitor]: Temperature Sensor Set up Successful")
 			self.one_wire_device_file = device_file
-
 			return device_file
 		except:
 			self.logger.warning("[Temperature monitor]: Error Initializing Temperature Probe")
@@ -146,9 +143,7 @@ class TempMonitor():
 			if equals_pos != -1:
 				temp_string = lines[1][equals_pos+2:]
 				temperature = float(temp_string) / 1000.0
-
 			self.temperature = temperature
-
 			return temperature
 		except:
 			self.logger.warning("[Temperature monitor]: Error Failed to get temperature data")
@@ -158,7 +153,6 @@ class TempMonitor():
 
 		self.state = True
 		self.begin()
-
 		while self.state:
 			self.get_temp()
 			data = {"temperature":self.temperature,"unit":"Celsius"}
@@ -181,12 +175,9 @@ class PHMonitor:
 		if not os.path.exists(api_dir):
 			os.makedirs(api_dir)
 		log_file = log_dir + 'PH_process.log'
-
 		self.state = False
 		self.ph = None
-		self.voltage = None
 		self.temperature_api_file = temperature_api_file
-		self.temperature = None
 		self.refresh_rate= refresh_rate
 		self.api_file = api_dir + 'PH.json'
 		self.logger = setup_logger(name= __name__+ "_ph_logger", logfile=log_file, level=10 if debug_mode else 20, formatter = formatter, maxBytes=2e6, backupCount=3)
@@ -206,12 +197,9 @@ class PHMonitor:
 		ph_reader.begin()
 		self.ph_reader, self.voltage_reader = ph_reader, voltage_reader
 		self.logger.info("[PH monitor]: PH Sensor Set up Successful")
-
 		return ph_reader, voltage_reader
 
-
 	def get_ph(self, temp=25):
-
 		voltage = self.voltage_reader.readVoltage(self.ADC_pin)
 		if self.temperature_api_file:
 			with open(self.temperature_api_file,'r') as f:
@@ -221,20 +209,14 @@ class PHMonitor:
 				temperature = temp
 		else:
 			temperature = temp
-
 		ph = self.ph_reader.readPH(voltage['r'],temperature)
-
-		self.voltage = voltage['r']
-		self.temperature = temperature
 		self.ph = ph
-
-		return ph, voltage['r'], temperature
+		return ph
 
 	@threaded
 	def start(self):
 		self.state = True
 		self.begin()
-
 		while self.state:
 			self.get_ph()
 			data = {"ph":self.ph,"unit":"ph"}
@@ -245,10 +227,18 @@ class PHMonitor:
 		data = {"ph":self.ph,"unit":"ph"}
 		push_to_api(self.api_file, data)
 		self.logger.info("\n[PH monitor]: Stopped")
-
 	def stop(self):
 		self.state=False
 
-
 if __name__ == '__main__':
-	pass
+
+    temp_monitor = TempMonitor()
+    ph_monitor = PHMonitor(temperature_api_file = './api/TEMPERATURE.json')
+    temp_monitor.start()
+    ph_monitor.start()
+    try:
+        while True:
+            time.sleep(1)
+    except:
+        temp_monitor.stop()
+        ph_monitor.stop()
