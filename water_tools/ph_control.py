@@ -136,8 +136,6 @@ class TempMonitor():
 	@one_wire_device_file.setter
 	def one_wire_device_file(self,value):
 		"""Set the one_wire_device_file of the TempMonitor"""
-		if not isinstance(value, str):
-			raise TypeError("one_wire_device_file must be a string")
 		self._one_wire_device_file = value
 
 	def begin(self):
