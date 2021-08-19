@@ -65,7 +65,7 @@ class PHController():
 
 	def get_ph(self, manual_ph=None):
 
-		if ph_api_file:
+		if self.ph_api_file:
 			with open(self.ph_api_file, 'r')as f:
 				data = json.load(f)
 			ph = data['ph']
