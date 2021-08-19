@@ -89,5 +89,8 @@ All kinds of feedback and contributions are welcome.
 
 ## Change Log
 
+###0.1.2
+- Add error handling when api is busy and parameter getters access file when they are being written to
+
 ### 0.1.0
 - first working code debut

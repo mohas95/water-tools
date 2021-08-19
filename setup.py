@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setuptools.setup(
     name="RPi-water-tools",
     keywords = 'Raspberry Pi, Raspi, Python, GPIO, API, non-blocking, ph, temperature, DFRobot, water, monitoring',
-    version="0.1.1",
+    version="0.1.2",
     author="Mohamed Debbagh",
     author_email="moha7108@protonmail.com",
     description="This package provides various water monitoring tools for sensor and pump integration. This package uses the RPI-Control-center gpio engine as its driver to make RPI api-ification easy",
