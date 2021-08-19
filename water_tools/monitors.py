@@ -211,17 +211,17 @@ class PHMonitor:
 			temperature = temp
 		ph = self.ph_reader.readPH(voltage['r'],temperature)
 		self.ph = ph
-		return ph
+		return ph, voltage['r'], temperature
 
 	@threaded
 	def start(self):
 		self.state = True
 		self.begin()
 		while self.state:
-			self.get_ph()
+			_,voltage, temperature=self.get_ph()
 			data = {"ph":self.ph,"unit":"ph"}
 			push_to_api(self.api_file, data)
-			self.logger.info('[PH monitor]: PH Voltage: {}, Temperature: {} ----> PH: {}'.format(self.voltage,self.temperature,self.ph))
+			self.logger.info('[PH monitor]: PH Voltage: {}, Temperature: {} ----> PH: {}'.format(voltage,temperature,self.ph))
 			time.sleep(self.refresh_rate)
 		self.ph = None
 		data = {"ph":self.ph,"unit":"ph"}
