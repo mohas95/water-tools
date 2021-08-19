@@ -4,3 +4,10 @@ ecdata.txt
 status.json
 logs/
 api/
+
+dist/
+
+*.egg-info
+*.json
+logs/*
+api/*
