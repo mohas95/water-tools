@@ -147,6 +147,8 @@ class TempMonitor():
 			return temperature
 		except:
 			self.logger.warning("[Temperature monitor]: Error Failed to get temperature data")
+			self.temperature = None
+			return None
 
 	@threaded
 	def start(self):
@@ -308,18 +310,28 @@ class PHMonitor:
 		return ph_reader, voltage_reader
 
 	def get_ph(self, temp=25):
-		voltage = self.voltage_reader.readVoltage(self.ADC_pin)
-		if self.temperature_api_file:
-			with open(self.temperature_api_file,'r') as f:
-				data = json.load(f)
-			temperature = data['temperature']
-			if not temperature:
+		try:
+			voltage = self.voltage_reader.readVoltage(self.ADC_pin)
+
+			if self.temperature_api_file:
+				try:
+					with open(self.temperature_api_file,'r') as f:
+						data = json.load(f)
+					temperature = data['temperature']
+					if not temperature:
+						temperature = temp
+				except:
+					self.logger.warning('[PH monitor]:Error, Could not retrieve temperature from api file, using default')
+					temperature = temp
+			else:
 				temperature = temp
-		else:
-			temperature = temp
-		ph = self.ph_reader.readPH(voltage['r'],temperature)
-		self.ph = ph
-		return ph, voltage['r'], temperature
+			ph = self.ph_reader.readPH(voltage['r'],temperature)
+			self.ph = ph
+			return ph, voltage['r'], temperature
+		except:
+			self.logger.warning('[PH monitor]:Error, Could not retrieve pH Data')
+			self.ph = None
+			return None
 
 	@threaded
 	def start(self):

@@ -200,11 +200,16 @@ class PHController():
 
 	def get_ph(self, manual_ph=None):
 		if self.ph_api_file:
-			with open(self.ph_api_file, 'r')as f:
-				data = json.load(f)
-			ph = data['ph']
+			try:
+				with open(self.ph_api_file, 'r')as f:
+					data = json.load(f)
+				ph = data['ph']
+			except:
+				self.logger.warning('[PH Controller]:Error, Could not retrieve pH data from API file')
+				ph = manual_ph
 		else:
 			ph = manual_ph
+			
 		self.ph = ph
 		return ph
 
