@@ -196,7 +196,7 @@ class PHController():
 													)
 		self.relay_engine.safe_stop_all_relays()
 		self.relay_engine.start()
-		self.get_ph()
+		# self.get_ph()
 
 	def get_ph(self, manual_ph=None):
 		if self.ph_api_file:
