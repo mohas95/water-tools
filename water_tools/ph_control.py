@@ -24,8 +24,8 @@ def threaded(func):
 		return thread
 	return wrapper
 
-class PHController(up_pin=26, down_pin=20, ph_api_file='./api/PH.json', config_file='./ph_config.json',dose_time=10,delay_time=20, high_thresh = 8, low_thresh=7, margin= 0.5, api_dir = './api/', log_dir = './logs/', refresh_rate = 1):
-	def __init__(self):
+class PHController():
+	def __init__(self,up_pin=26, down_pin=20, ph_api_file='./api/PH.json', config_file='./ph_config.json',dose_time=10,delay_time=20, high_thresh = 8, low_thresh=7, margin= 0.5, api_dir = './api/', log_dir = './logs/', refresh_rate = 1):
 
 		if not os.path.exists(log_dir):
 			os.makedirs(log_dir)
