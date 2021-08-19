@@ -88,13 +88,13 @@ class PHController():
 				self.get_ph()
 				ph = self.ph
 				if ph < self.low_thresh:
-					self.logger.info('[PH controller]: Low threshold enabling PH up')
+					self.logger.info(f'[PH controller]:[Ph={ph}] Low threshold hit enabling PH up')
 					self.relay_engine.update_config_file("1",True)
 					time.sleep(self.dose_time)
 					self.relay_engine.update_config_file("1",False)
 					time.sleep(self.delay_time)
 				if ph > self.high_thresh:
-					self.logger.info('[PH controller]: High threshold enabling PH down')
+					self.logger.info(f'[PH controller]:[Ph={ph}] High threshold hit enabling PH down')
 					self.relay_engine.update_config_file("2",True)
 					time.sleep(self.dose_time)
 					self.relay_engine.update_config_file("2",False)
