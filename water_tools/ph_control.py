@@ -209,7 +209,7 @@ class PHController():
 				ph = manual_ph
 		else:
 			ph = manual_ph
-			
+
 		self.ph = ph
 		return ph
 
@@ -225,20 +225,25 @@ class PHController():
 			while self.state and self.ph:
 				self.get_ph()
 				ph = self.ph
-				if ph < self.low_thresh:
-					self.logger.info(f'[PH controller]:[Ph={ph}] Low threshold hit enabling PH up')
-					self.relay_engine.update_config_file("1",True)
-					time.sleep(self.dose_time)
-					self.relay_engine.update_config_file("1",False)
-					time.sleep(self.delay_time)
-				if ph > self.high_thresh:
-					self.logger.info(f'[PH controller]:[Ph={ph}] High threshold hit enabling PH down')
-					self.relay_engine.update_config_file("2",True)
-					time.sleep(self.dose_time)
-					self.relay_engine.update_config_file("2",False)
-					time.sleep(self.delay_time)
-				else:
-					time.sleep(self.refresh_rate)
+
+				try:
+					if ph < self.low_thresh:
+						self.logger.info(f'[PH controller]:[Ph={ph}] Low threshold hit enabling PH up')
+						self.relay_engine.update_config_file("1",True)
+						time.sleep(self.dose_time)
+						self.relay_engine.update_config_file("1",False)
+						time.sleep(self.delay_time)
+					if ph > self.high_thresh:
+						self.logger.info(f'[PH controller]:[Ph={ph}] High threshold hit enabling PH down')
+						self.relay_engine.update_config_file("2",True)
+						time.sleep(self.dose_time)
+						self.relay_engine.update_config_file("2",False)
+						time.sleep(self.delay_time)
+					else:
+						time.sleep(self.refresh_rate)
+				except:
+					self.logger.warning('[PH controller]: Could not get proper PH value, will try again')
+
 		self.relay_engine.stop()
 		self.logger.info("[PH controller]: Stopped")
 
