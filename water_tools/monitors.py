@@ -162,7 +162,7 @@ class TempMonitor():
 		self.temperature = None
 		data = {"temperature":self.temperature,"unit":"Celsius"}
 		push_to_api(self.api_file, data)
-		self.logger.info("\n[Temperature monitor]: Stopped")
+		self.logger.info("[Temperature monitor]: Stopped")
 
 	def stop(self):
 		self.state=False
@@ -226,7 +226,7 @@ class PHMonitor:
 		self.ph = None
 		data = {"ph":self.ph,"unit":"ph"}
 		push_to_api(self.api_file, data)
-		self.logger.info("\n[PH monitor]: Stopped")
+		self.logger.info("[PH monitor]: Stopped")
 	def stop(self):
 		self.state=False
 

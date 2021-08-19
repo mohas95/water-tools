@@ -102,7 +102,7 @@ class PHController():
 				else:
 					time.sleep(self.refresh_rate)
 		self.relay_engine.stop()
-		self.logger.info("\n[PH controller]: Stopped")
+		self.logger.info("[PH controller]: Stopped")
 
 	def stop(self):
 		self.state = False
