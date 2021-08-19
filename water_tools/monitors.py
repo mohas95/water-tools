@@ -188,6 +188,114 @@ class PHMonitor:
 		self.ADC_reader =None
 		self.thread = None
 
+	@property
+	def state(self):
+		"""Return the state of the PHMonitor"""
+		return self._state
+	@state.setter
+	def state(self,value):
+		"""Set the state of the PHMonitor"""
+		self._state = value
+
+	@property
+	def ph(self):
+		"""Return the ph of the PHMonitor"""
+		return self._ph
+	@ph.setter
+	def ph(self,value):
+		"""Set the ph of the PHMonitor"""
+		self._ph = value
+
+	@property
+	def temperature_api_file(self):
+		"""Return the temperature_api_file of the PHMonitor"""
+		return self._temperature_api_file
+	@temperature_api_file.setter
+	def temperature_api_file(self,value):
+		"""Set the temperature_api_file of the PHMonitor"""
+		self._temperature_api_file = value
+
+	@property
+	def refresh_rate(self):
+		"""Return the refresh_rate of the PHMonitor"""
+		return self._refresh_rate
+	@refresh_rate.setter
+	def refresh_rate(self,value):
+		"""Set the refresh_rate of the PHMonitor"""
+		self._refresh_rate = value
+
+	@property
+	def api_file(self):
+		"""Return the api_file of the PHMonitor"""
+		return self._api_file
+	@api_file.setter
+	def api_file(self,value):
+		"""Set the api_file of the PHMonitor"""
+		self._api_file = value
+
+	@property
+	def logger(self):
+		"""Return the logger of the PHMonitor"""
+		return self._logger
+	@logger.setter
+	def logger(self,value):
+		"""Set the logger of the PHMonitor"""
+		self._logger = value
+
+	@property
+	def ADC_pin(self):
+		"""Return the ADC_pin of the PHMonitor"""
+		return self._ADC_pin
+	@ADC_pin.setter
+	def ADC_pin(self,value):
+		"""Set the ADC_pin of the PHMonitor"""
+		self._ADC_pin = value
+
+	@property
+	def I2C_ADR(self):
+		"""Return the I2C_ADR of the PHMonitor"""
+		return self._I2C_ADR
+	@I2C_ADR.setter
+	def I2C_ADR(self,value):
+		"""Set the I2C_ADR of the PHMonitor"""
+		self._I2C_ADR = value
+
+	@property
+	def gain(self):
+		"""Return the gain of the PHMonitor"""
+		return self._gain
+	@gain.setter
+	def gain(self,value):
+		"""Set the gain of the PHMonitor"""
+		self._gain = value
+
+	@property
+	def ph_reader(self):
+		"""Return the ph_reader of the PHMonitor"""
+		return self._ph_reader
+	@ph_reader.setter
+	def ph_reader(self,value):
+		"""Set the ph_reader of the PHMonitor"""
+		self._ph_reader = value
+
+	@property
+	def ADC_reader(self):
+		"""Return the ADC_reader of the PHMonitor"""
+		return self._ADC_reader
+	@ADC_reader.setter
+	def ADC_reader(self,value):
+		"""Set the ADC_reader of the PHMonitor"""
+		self._ADC_reader = value
+
+	@property
+	def thread(self):
+		"""Return the thread of the PHMonitor"""
+		return self._thread
+	@thread.setter
+	def thread(self,value):
+		"""Set the thread of the PHMonitor"""
+		self._thread = value
+
 	def begin(self):
 		voltage_reader = DFR_ADS1115.ADS1115() #instantiate as1115 ADC I2X Unit
 		ph_reader = DFR_PH.DFRobot_PH() # instantiate PH Probe
