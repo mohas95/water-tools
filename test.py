@@ -18,4 +18,4 @@ if __name__ == '__main__':
     except:
         temp_monitor.stop()
         ph_monitor.stop()
-        ph_controller.start()
+        ph_controller.stop()
