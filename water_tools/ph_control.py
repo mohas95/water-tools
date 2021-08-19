@@ -36,9 +36,8 @@ class PHController(up_pin=26, down_pin=20, ph_api_file='./api/PH.json', config_f
 		self.refresh_rate = refresh_rate
 		self.api_dir = api_dir
 		self.log_dir = log_dir
-		self.high_thresh = high_thresh
-		self.low_thresh = low_thresh
-		self.margin = margin
+		self.high_thresh = high_thresh + margin
+		self.low_thresh = low_thresh - margin
 		self.up_pin = up_pin
 		self.down_pin = down_pin
 		self.dose_time = dose_time
