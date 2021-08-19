@@ -47,6 +47,141 @@ class PHController():
 		self.ph = None
 		self.logger = setup_logger(name=__name__+"_PH_Controller_logger", logfile=log_file, level=10 if debug_mode else 20, formatter = formatter, maxBytes=2e6, backupCount=3)
 
+	@property
+	def state(self):
+		"""Return the state of the PHController"""
+		return self._state
+	@state.setter
+	def state(self,value):
+		"""Set the state of the PHController"""
+		self._state = value
+
+	@property
+	def config_file(self):
+		"""Return the config_file of the PHController"""
+		return self._config_file
+	@config_file.setter
+	def config_file(self,value):
+		"""Set the config_file of the PHController"""
+		self._config_file = value
+
+	@property
+	def refresh_rate(self):
+		"""Return the refresh_rate of the PHController"""
+		return self._refresh_rate
+	@refresh_rate.setter
+	def refresh_rate(self,value):
+		"""Set the refresh_rate of the PHController"""
+		self._refresh_rate = value
+
+	@property
+	def api_dir(self):
+		"""Return the api_dir of the PHController"""
+		return self._api_dir
+	@api_dir.setter
+	def api_dir(self,value):
+		"""Set the api_dir of the PHController"""
+		self._api_dir = value
+
+	@property
+	def log_dir(self):
+		"""Return the log_dir of the PHController"""
+		return self._log_dir
+	@log_dir.setter
+	def log_dir(self,value):
+		"""Set the log_dir of the PHController"""
+		self._log_dir = value
+
+	@property
+	def high_thresh(self):
+		"""Return the high_thresh of the PHController"""
+		return self._high_thresh
+	@high_thresh.setter
+	def high_thresh(self,value):
+		"""Set the high_thresh of the PHController"""
+		self._high_thresh = value
+
+	@property
+	def low_thresh(self):
+		"""Return the low_thresh of the PHController"""
+		return self._low_thresh
+	@low_thresh.setter
+	def low_thresh(self,value):
+		"""Set the low_thresh of the PHController"""
+		self._low_thresh = value
+
+	@property
+	def up_pin(self):
+		"""Return the up_pin of the PHController"""
+		return self._up_pin
+	@up_pin.setter
+	def up_pin(self,value):
+		"""Set the up_pin of the PHController"""
+		self._up_pin = value
+
+	@property
+	def down_pin(self):
+		"""Return the down_pin of the PHController"""
+		return self._down_pin
+	@down_pin.setter
+	def down_pin(self,value):
+		"""Set the down_pin of the PHController"""
+		self._down_pin = value
+
+	@property
+	def dose_time(self):
+		"""Return the dose_time of the PHController"""
+		return self._dose_time
+	@dose_time.setter
+	def dose_time(self,value):
+		"""Set the dose_time of the PHController"""
+		self._dose_time = value
+
+	@property
+	def delay_time(self):
+		"""Return the delay_time of the PHController"""
+		return self._delay_time
+	@delay_time.setter
+	def delay_time(self,value):
+		"""Set the delay_time of the PHController"""
+		self._delay_time = value
+
+	@property
+	def relay_engine(self):
+		"""Return the relay_engine of the PHController"""
+		return self._relay_engine
+	@relay_engine.setter
+	def relay_engine(self,value):
+		"""Set the relay_engine of the PHController"""
+		self._relay_engine = value
+
+	@property
+	def ph_api_file(self):
+		"""Return the ph_api_file of the PHController"""
+		return self._ph_api_file
+	@ph_api_file.setter
+	def ph_api_file(self,value):
+		"""Set the ph_api_file of the PHController"""
+		self._ph_api_file = value
+
+	@property
+	def ph(self):
+		"""Return the ph of the PHController"""
+		return self._ph
+	@ph.setter
+	def ph(self,value):
+		"""Set the ph of the PHController"""
+		self._ph = value
+
+	@property
+	def logger(self):
+		"""Return the logger of the PHController"""
+		return self._logger
+	@logger.setter
+	def logger(self,value):
+		"""Set the logger of the PHController"""
+		self._logger = value
+
 	def begin(self):
 		default_config = {
 							"1":{'name':'PH_up', 'pin':self.up_pin, 'state':False},
