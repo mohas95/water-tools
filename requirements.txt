@@ -1,0 +1,5 @@
+DFRobot-EC-PH-ADC==0.1.1
+logzero==1.7.0
+RPI-control-center==0.1.2
+RPi.GPIO==0.7.0
+smbus==1.1.post2
