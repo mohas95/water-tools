@@ -243,6 +243,7 @@ class PHController():
 						time.sleep(self.refresh_rate)
 				except:
 					self.logger.warning('[PH controller]: Could not get proper PH value, will try again')
+					time.sleep(self.refresh_rate)
 
 		self.relay_engine.stop()
 		self.logger.info("[PH controller]: Stopped")
