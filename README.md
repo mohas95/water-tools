@@ -88,6 +88,10 @@ All kinds of feedback and contributions are welcome.
   - [GitLab](https://gitlab.com/moha7108/), [Github](https://github.com/moha7108/), [Twitter](https://twitter.com/moha7108)
 
 ## Change Log
+
+###0.1.4
+- Ph controller success flag when begin() is complete
+
 ###0.1.3
 - fix error handling of ph controller
 
