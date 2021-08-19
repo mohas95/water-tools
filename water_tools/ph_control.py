@@ -110,17 +110,3 @@ class PHController():
 
 if __name__ == '__main__':
 	pass
-
-# gpio_engine = GPIO_engine.BulkUpdater(
-#                                         config_file = './ph_config.json',
-#                                         api_dir = './api',
-#                                         default_config = default_config,
-#                                         refresh_rate = 1
-#                                         )
-# gpio_engine.start()
-#
-#
-#
-#
-#
-# gpio_engine.stop()

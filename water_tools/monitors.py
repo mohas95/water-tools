@@ -157,7 +157,7 @@ class TempMonitor():
 			self.get_temp()
 			data = {"temperature":self.temperature,"unit":"Celsius"}
 			push_to_api(self.api_file, data)
-			self.logger.info(f'[Temperatur(Celsuis)]: {self.temperature}')
+			self.logger.debug(f'[Temperatur(Celsuis)]: {self.temperature}')
 			time.sleep(self.refresh_rate)
 		self.temperature = None
 		data = {"temperature":self.temperature,"unit":"Celsius"}
@@ -221,7 +221,7 @@ class PHMonitor:
 			_,voltage, temperature=self.get_ph()
 			data = {"ph":self.ph,"unit":"ph"}
 			push_to_api(self.api_file, data)
-			self.logger.info('[PH monitor]: PH Voltage: {}, Temperature: {} ----> PH: {}'.format(voltage,temperature,self.ph))
+			self.logger.debug('[PH monitor]: PH Voltage: {}, Temperature: {} ----> PH: {}'.format(voltage,temperature,self.ph))
 			time.sleep(self.refresh_rate)
 		self.ph = None
 		data = {"ph":self.ph,"unit":"ph"}
