@@ -1,71 +1,93 @@
-# PH control
+This package provides various water monitoring tools for sensor and pump integration. At the current stage of development the package includes temperature monitor,
+ph monitor, ph controller.This package uses the RPI-Control-center gpio engine as its driver to make RPI API-ification easy.
+At this current stage this python package is only for the Raspberry pi and uses DFRobot sensor library as well as the ADC integration
 
-## Raspberry Drivers and library setup
+- Documentation: *Coming soon*
+- [Github](https://github.com/moha7108/water-tools)
 
-- https://www.waveshare.com/wiki/Libraries_Installation_for_RPi
+## Installation
 
-### Update system
-- cd
-- sudo apt update
-- sudo apt list --upgradeable
-- sudo apt ugrade
-- sudo apt autoremove
+- pip
+```shell
+pip install RPi-water-tools
+```
+- source
+```shell
+git clone https://github.com/moha7108/water-tools
+cd water_tools
+pip install -r requirements.txt
+```
 
-### System libraries
-- sudo apt-get install wiringpi
-- wget https://project-downloads.drogon.net/wiringpi-latest.deb
-- sudo dpkg -i wiringpi-latest.deb
-- gpio -v
-- sudo apt-get install libopenjp2-7 -y
-- sudo apt-get install libatlas-base-dev -y
-- sudo apt install libtiff -y
-- sudo apt install libtiff5 -y
-- sudo apt-get install -y i2c-tools
+## Example Usage
 
-### Install virtualenv
-- sudo apt install python3-pip
-- sudo pip3 install virtualenv
+```python
+from water_tools import monitors, ph_control
+import time
 
-### Create, activate virtualenv and install pip libraries
-- virtualenv env
-- source env/bin/activate
-- pip install -r requirements.txt
+if __name__ == '__main__':
+    temp_monitor = monitors.TempMonitor()
+    ph_monitor = monitors.PHMonitor(temperature_api_file = './api/TEMPERATURE.json')
+    ph_controller = ph_control.PHController(ph_api_file='./api/PH.json', config_file='./ph_config.json', api_dir = './api/', log_dir = './logs/')
 
-### Alternatively, Manually install pip libraries
-- pip install RPi.GPIO
-- pip install smbus
-- pip install pillow
-- pip install numpy
-- pip install pandas
+    temp_monitor.start()
+    ph_monitor.start()
+    ph_controller.start()
 
-## Hardware
+    try:
+        while True:
+            time.sleep(1)
+    except:
+        temp_monitor.stop()
+        ph_monitor.stop()
+        ph_controller.stop()
+```
 
-- Raspberrypi 3B+
-- DFRobot PH sensor V2 PRO (within the DFROBOT_PH subdirectory)
-- DFRobot ADS1115 ADC unit (within the DFROBOT_PH subdirectory)
-- DS18B20 Temperature probe with breakout board
+### Configuration/ API Files
+- *will be updated*
 
-## Configuration and user control files
-### ./status.json
-- this file will set status of the processes: PH up, PH Down, and PH Monitoring, this file can be modified directly but serves as a file that allows for user controls
-### ./system/ph-control.service
-- this file runs the ph-control script as a service file on linux OS
-- systemctl enable ~/ph-control/system/ph-control.service
-- systemctl start ph-control
+## Hardware and drivers
 
-### ./phdata.txt
--  this file saves the Calibration parameters of the DFRobot PH sensor
-### ./logs/*
-- logs of the process as well as status operations
+### Hardware
 
-## Issues
-- MQTT communication for UI control
-- Calibration protocol
-- Turn this into a class structure for replicability/ abstraction (objectify)
-- add liscence
+- [Raspberrypi 3B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)
+  - OS: Rasbian Buster +
 
-### resolved
-- add temperature sensor for temperature compensation
-- json files for api
-- Logging over print statements (log files)
-- Service file
+### System Libraries
+
+- [waveshare guide](https://www.waveshare.com/wiki/Libraries_Installation_for_RPi)
+
+``` shell
+cd
+sudo apt update
+sudo apt list --upgradeable
+sudo apt ugrade
+sudo apt autoremove
+
+sudo apt-get install wiringpi
+wget https://project-downloads.drogon.net/wiringpi-latest.deb
+sudo dpkg -i wiringpi-latest.deb
+gpio -v
+sudo apt-get install libopenjp2-7 -y
+sudo apt-get install libatlas-base-dev -y
+sudo apt install libtiff -y
+sudo apt install libtiff5 -y
+sudo apt-get install -y i2c-tools
+```
+
+## Feedback
+
+All kinds of feedback and contributions are welcome.
+
+- [Create an issue](https://github.com/moha7108/water-tools/issues)
+- Create a pull request
+- Reach out to @moha7108
+
+## Contributors
+
+- Mohamed Debbagh
+  - [GitLab](https://gitlab.com/moha7108/), [Github](https://github.com/moha7108/), [Twitter](https://twitter.com/moha7108)
+
+## Change Log
+
+### 0.1.0
+- first working code debut
