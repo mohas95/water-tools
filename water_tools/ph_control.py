@@ -102,6 +102,7 @@ class PHController(up_pin=26, down_pin=20, ph_api_file='./api/PH.json', config_f
 				else:
 					time.sleep(self.refresh_rate)
 			self.relay_engine.stop()
+			self.logger.info("\n[PH controller]: Stopped")
 
 	def stop():
 		self.state = False
