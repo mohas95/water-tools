@@ -89,13 +89,13 @@ All kinds of feedback and contributions are welcome.
 
 ## Change Log
 
-###0.1.4
+### 0.1.4
 - Ph controller success flag when begin() is complete
 
-###0.1.3
+### 0.1.3
 - fix error handling of ph controller
 
-###0.1.2
+### 0.1.2
 - Add error handling when api is busy and parameter getters access file when they are being written to
 
 ### 0.1.0
