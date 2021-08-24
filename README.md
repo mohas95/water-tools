@@ -15,7 +15,7 @@ pip install RPi-water-tools
 ```shell
 git clone https://github.com/moha7108/water-tools
 cd water_tools
-pip install -r requirements.txt
+pip install -e
 ```
 
 ## Example Usage
@@ -34,6 +34,7 @@ if __name__ == '__main__':
     ph_controller.start()
 
     try:
+        ################### Place any other code here since its non blocking
         while True:
             time.sleep(1)
     except:
@@ -88,6 +89,11 @@ All kinds of feedback and contributions are welcome.
   - [GitLab](https://gitlab.com/moha7108/), [Github](https://github.com/moha7108/), [Twitter](https://twitter.com/moha7108)
 
 ## Change Log
+
+### 0.1.5
+- fix return values when exception is hit during get ph process of the ph monitors
+- add temp and voltage attributes to ph monitor for better data handling
+- return valuse based on object attributes
 
 ### 0.1.4
 - Ph controller success flag when begin() is complete
