@@ -179,6 +179,8 @@ class PHMonitor:
 		log_file = log_dir + 'PH_process.log'
 		self.state = False
 		self.ph = None
+		self.temp = None
+		self.voltage = None
 		self.temperature_api_file = temperature_api_file
 		self.refresh_rate= refresh_rate
 		self.api_file = api_dir + 'PH.json'
@@ -207,6 +209,24 @@ class PHMonitor:
 	def ph(self,value):
 		"""Set the ph of the PHMonitor"""
 		self._ph = value
+
+	@property
+	def temp(self):
+		"""Return the temp of the PHMonitor"""
+		return self._temp
+	@temp.setter
+	def temp(self,value):
+		"""Set the temp of the PHMonitor"""
+		self._temp = value
+
+	@property
+	def voltage(self):
+		"""Return the voltage of the PHMonitor"""
+		return self._voltage
+	@voltage.setter
+	def voltage(self,value):
+		"""Set the voltage of the PHMonitor"""
+		self._voltage = value
 
 	@property
 	def temperature_api_file(self):
@@ -325,23 +345,29 @@ class PHMonitor:
 					temperature = temp
 			else:
 				temperature = temp
-			ph = self.ph_reader.readPH(voltage['r'],temperature)
-			self.ph = ph
-			return ph, voltage['r'], temperature
+
+
+			self.ph = self.ph_reader.readPH(voltage['r'],temperature)
+			self.temp = temperature
+			self.voltage = voltage['r']
+
+			return self.ph, self.voltage, self.temp
 		except:
 			self.logger.warning('[PH monitor]:Error, Could not retrieve pH Data')
 			self.ph = None
-			return None, None, None
+			self.temp = None
+			self.voltage = None
+			return self.ph, self.voltage, self.temp
 
 	@threaded
 	def start(self):
 		self.state = True
 		self.begin()
 		while self.state:
-			_,voltage, temperature=self.get_ph()
+			self.get_ph()
 			data = {"ph":self.ph,"unit":"ph"}
 			push_to_api(self.api_file, data)
-			self.logger.debug('[PH monitor]: PH Voltage: {}, Temperature: {} ----> PH: {}'.format(voltage,temperature,self.ph))
+			self.logger.debug('[PH monitor]: PH Voltage: {}, Temperature: {} ----> PH: {}'.format(self.voltage,self.temp,self.ph))
 			time.sleep(self.refresh_rate)
 		self.ph = None
 		data = {"ph":self.ph,"unit":"ph"}
