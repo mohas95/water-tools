@@ -331,7 +331,7 @@ class PHMonitor:
 		except:
 			self.logger.warning('[PH monitor]:Error, Could not retrieve pH Data')
 			self.ph = None
-			return None
+			return None, None, None
 
 	@threaded
 	def start(self):
